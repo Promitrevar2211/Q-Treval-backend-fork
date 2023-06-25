@@ -1,0 +1,18 @@
+{
+    "SYS_APP_CNF": {
+        "sender_email": "contact@apttechsols.com",
+        "receiver_email": "arpitsh018@gmail.com",
+        "site_name": "Media360",
+        "site_address": { "city": "Bengaluru", "country": "India" },
+        "contact_email": "contact@apttechsols.com",
+        "social": {
+            "twitter": "https://twitter.com/apttechsols",
+            "facebook": "https://www.facebook.com/apttechsols",
+            "linkedin": "https://www.linkedin.com/company/apttechsols/",
+            "instagram": "https://www.facebook.com/apttechsols"
+        },
+        "sender_email_name": "Media360 <contact@apttechsols.com>"
+    },
+    "PRIVATE_API_KEY": "si51inptQaBvh6ZzGvI1iaOl8JtJYqWmGbnyVj994Nk=",
+    "DATABASE_CONNECTION_URI_DEV": "mongodb+srv://dsoul-travel:8gPNQvpnMj3HSPSt@dsoul-travel.f6dvugd.mongodb.net/dsoul-travel"
+}
