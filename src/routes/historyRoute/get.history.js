@@ -58,7 +58,6 @@ export const getListHistoryHandler = async (req, res) => {
 
     if (user_id) {
       where = {
-        ...where,
         user_id,
       };
     }
@@ -93,7 +92,7 @@ export const getListHistoryHandler = async (req, res) => {
       options.push({ country: { $in: regexArray } });
     }
 
-    where = { $or: options };
+    where = { ...where, $or: options };
 
     let paginated_data = await HistoryModel.find({ ...where })
       .sort({ ...pagination.sort })
