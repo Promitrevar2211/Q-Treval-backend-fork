@@ -8,18 +8,18 @@ import MemberModel from "../../models/memberModel";
 
 export const deleteMemberHandler = async (req, res) => {
   try {
-    let member_id;
+    let memberId;
     if (req.isAdmin) {
       if (!req.params.memberId)
         throw new CustomError(`Error, please provide a member id`);
-      else member_id = req.params.memberId;
+      else memberId = req.params.memberId;
     } else {
-      member_id = req.tokenData._id;
+      memberId = req.tokenData._id;
     }
 
     let deleteMember = await MemberModel.findOneAndUpdate(
-      { _id: member_id, isDeleted: false },
-      { isDeleted: true },
+      { _id: memberId, status: { $ne: "deleted" } },
+      { status: "deleted" },
       { new: true }
     );
     if (!deleteMember) throw new CustomError(`Error, Member does not exist`);

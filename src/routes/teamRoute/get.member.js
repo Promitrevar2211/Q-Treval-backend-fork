@@ -9,13 +9,12 @@ import MemberModel from "../../models/memberModel";
 
 export const getSingleMemberHandler = async (req, res) => {
   try {
-    
     if (!req.params.memberId)
       throw new CustomError(`Error, please provide a member id`);
 
     let memberData = await MemberModel.findOne({
       _id: req.params.memberId,
-      isDeleted: false,
+      status: { $ne: "deleted" },
     });
 
     if (!memberData) throw new CustomError(`Error, member not found`);
@@ -29,8 +28,7 @@ export const getSingleMemberHandler = async (req, res) => {
           MEMBER_MESSAGE.MEMBER_FOUND,
           0
         )
-    );
-
+      );
   } catch (error) {
     logsErrorAndUrl(req, error, path.basename(__filename));
     if (error instanceof ValidationError || error instanceof CustomError) {
@@ -59,7 +57,7 @@ export const getListMemberHandler = async (req, res) => {
 
     let { search } = req.query;
     let where = {
-      isDeleted: false,
+      status: { $ne: "deleted" },
     };
 
     if (search) {

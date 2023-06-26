@@ -4,37 +4,31 @@ import { logsErrorAndUrl, responseGenerators } from "../../lib/utils";
 import { ValidationError } from "joi";
 import path from "path";
 import MemberModel from "../../models/memberModel";
-import { sign } from "jsonwebtoken";
-import config from "../../../config";
-import { loginMemberValidation } from "../../helpers/validations/member.validation";
-export const memberLoginHandler = async (req, res) => {
+
+export const approveMemberHandler = async (req, res) => {
   try {
-    await loginMemberValidation.validateAsync({ ...req.body });
+    if (!req.params.memberId)
+      throw new CustomError("Error, Please enter a member id");
 
-    let memberData = await MemberModel.findOne({
-      ...req.body,
-      status: { $ne: "deleted" },
-    });
+    let approveMember = await MemberModel.findOneAndUpdate(
+      {
+        _id: req.params.memberId,
+        status: "verified",
+      },
+      {
+        status: "approved",
+      },
+      { new: true }
+    );
 
-    if (!memberData) {
-      throw new CustomError(`Incorrect Email or Password`);
-    }
-
-    if (memberData["status"] == "unverified")
-      throw new CustomError(`Please verify your email`);
-    else if (memberData["status"] == "verified") {
-      throw new CustomError(`Please wait for approval from admin`);
-    }
-
-    let newjwt = sign({ _id: memberData._id }, config.JWT_SECRET_KEY);
-
+    if (!approveMember) throw new CustomError("Error, Verified Member not found");
     return res
       .status(StatusCodes.OK)
       .send(
         responseGenerators(
-          { accessToken: newjwt, memberData: memberData },
+          { approveMember },
           StatusCodes.OK,
-          "Login Success",
+          "MEMBER HAS BEEN SUCCESSFULLY APPROVED",
           0
         )
       );

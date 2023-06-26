@@ -1,6 +1,9 @@
 import { validationResult } from "express-validator";
 import Place from "../../models/destinationModel";
 import { CustomError } from "../../helpers/custome.error";
+import { StatusCodes } from "http-status-codes";
+import { responseGenerators } from "../../lib/utils";
+import { setPagination } from "../../commons/common-functions";
 
 // Middleware to handle validation errors
 const handleValidationErrors = (req, res, next) => {
@@ -25,6 +28,32 @@ export const addPlace = [
     }
   },
 ];
+
+export const getPlaces = async (req, res) => {
+  try {
+    const pagination = setPagination(req.query);
+    let paginated_data = await Place.find()
+      .sort({ ...pagination.sort })
+      .skip(pagination.offset)
+      .limit(pagination.limit);
+
+    let total_count = await Place.count();
+    return res
+      .status(StatusCodes.OK)
+      .send(
+        responseGenerators(
+          { paginated_data, total_count },
+          StatusCodes.OK,
+          "PLACES FOUND",
+          0
+        )
+      );
+   // const places = await Place.find().limit(10);
+  //  res.status(200).json(places);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
 
 export const deletePlace = async (req, res) => {
   try {

@@ -15,6 +15,7 @@ import { authenticateUser } from "./middleware/authorization";
 import memberRoute from "./routes/teamRoute";
 import { getPlaceDetailsHandler } from "./routes/tripRoute/get.placedetails";
 import placeRoute from "./routes/destinationRoute";
+import historyRoute from "./routes/historyRoute";
 const app = express();
 const server = new http.Server(app);
 
@@ -55,6 +56,7 @@ app.get("/api/place-details", authenticateUser, getPlaceDetailsHandler);
 app.use("/api/user", userRoute);
 app.use("/api/member", memberRoute);
 app.use("/api/place",placeRoute)
+app.use("/api/history",historyRoute);
 app.use((req, res, next) => {
   try {
     // set header for swagger.

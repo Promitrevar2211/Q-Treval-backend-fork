@@ -14,7 +14,7 @@ export const otpHandler = async (req, res) => {
 
     let getUser = await UserModel.findOne({
       email,
-      isDeleted: false,
+      status: { $ne: "deleted" },
     });
 
     if (!getUser) throw new CustomError("User does not exist");

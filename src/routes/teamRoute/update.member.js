@@ -6,25 +6,45 @@ import path from "path";
 import { MEMBER_MESSAGE } from "../../commons/global-constants";
 import MemberModel from "../../models/memberModel";
 import { updateMemberValidation } from "../../helpers/validations/member.validation";
-
+import moment from "moment";
 export const updateMemberHandler = async (req, res) => {
   try {
-    await updateMemberValidation.validateAsync({ ...req.body, ...req.params });
-    let membername = req.body.membername;
+    let memberId;
+    if (req.isAdmin) {
+      if (!req.params.memberId)
+        throw new CustomError("Error, Please enter a Member ID");
+      memberId = req.params.memberId;
+    } else {
+      memberId = req.tokenData._id;
+    }
 
-    let isPresent = await MemberModel.findOne({
-      membername,
-      _id: { $ne: req.params.memberId },
-    });
+    await updateMemberValidation.validateAsync({ ...req.body, memberId });
 
-    if (isPresent) {
-      throw new CustomError("Membername Already Exists");
+    if (req.body.dob) {
+      const dobString = req.body.dob;
+
+      let isvalid = moment(dobString, "DD/MM/YYYY", true).isValid();
+
+      if (!isvalid)
+        throw new CustomError("Please enter valid date format DD/MM/YYYY");
+
+      const [day, month, year] = dobString.split("/");
+
+      // Create a new Date object with the year, month (subtracting 1 as months are zero-based), and day
+      const formatdob = new Date(Date.UTC(year, month - 1, day));
+
+      req.body.dob = formatdob;
+    }
+
+    if (req.body.gender) {
+      if (req.body.gender != "Male" && req.body.gender != "Female")
+        throw new CustomError("Please specify a valid value");
     }
 
     let updateMember = await MemberModel.findOneAndUpdate(
       {
-        _id: req.params.memberId,
-        isDeleted: false,
+        _id: memberId,
+        status: "approved",
       },
       {
         ...req.body,
@@ -32,7 +52,7 @@ export const updateMemberHandler = async (req, res) => {
       { new: true }
     );
 
-    if (!updateMember) throw new CustomError("Error, Member not found");
+    if (!updateMember) throw new CustomError("Error,Approved Member not found");
     return res
       .status(StatusCodes.OK)
       .send(

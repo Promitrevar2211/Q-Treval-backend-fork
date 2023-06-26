@@ -8,17 +8,26 @@ import UserModel from "../../models/userModel";
 
 export const deleteUserHandler = async (req, res) => {
   try {
-    let user_id;
-    if (req.isAdmin) {
-      if (!req.params.userId)
-        throw new CustomError(`Error, please provide a user id`);
-      else user_id = req.params.userId;
-    } else {
-      user_id = req.tokenData._id;
+
+    let userId;
+    if (req.permission == "user") {
+      userId = req.tokenData._id;
+    } else if (req.permission == "member") {
+      if (!req.params.userId) throw new CustomError("Error, please provide a user id");
+      userId = req.params.userId;
     }
 
+    // let user_id;
+    // if (req.isAdmin) {
+    //   if (!req.params.userId)
+    //     throw new CustomError(`Error, please provide a user id`);
+    //   else user_id = req.params.userId;
+    // } else {
+    //   user_id = req.tokenData._id;
+    // }
+
     let deleteUser = await UserModel.findOneAndUpdate(
-      { _id: user_id, isDeleted: false },
+      { _id: userId, isDeleted: false },
       { isDeleted: true },
       { new: true }
     );

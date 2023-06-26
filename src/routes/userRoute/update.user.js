@@ -6,24 +6,43 @@ import path from "path";
 import { USER_MESSAGE } from "../../commons/global-constants";
 import UserModel from "../../models/userModel";
 import { updateUserValidation } from "../../helpers/validations/user.validation";
-
+import moment from "moment";
 export const updateUserHandler = async (req, res) => {
   try {
-    await updateUserValidation.validateAsync({ ...req.body, ...req.params });
-    let username = req.body.username;
+    let userId;
+    if (req.permission == "user") {
+      userId = req.tokenData._id;
+    } else if (req.permission == "member") {
+      if (!req.params.userId) throw new CustomError("Please enter a User ID");
+      userId = req.params.userId;
+    }
 
-    let isPresent = await UserModel.findOne({
-      username,
-      _id: { $ne: req.params.userId },
-    });
+    await updateUserValidation.validateAsync({ ...req.body, userId });
 
-    if (isPresent) {
-      throw new CustomError("Username Already Exists");
+    if (req.body.dob) {
+      const dobString = req.body.dob;
+
+      let isvalid = moment(dobString, "DD/MM/YYYY", true).isValid();
+
+      if (!isvalid)
+        throw new CustomError("Please enter valid date format DD/MM/YYYY");
+
+      const [day, month, year] = dobString.split("/");
+
+      // Create a new Date object with the year, month (subtracting 1 as months are zero-based), and day
+      const formatdob = new Date(Date.UTC(year, month - 1, day));
+
+      req.body.dob = formatdob;
+    }
+
+    if (req.body.gender) {
+      if (req.body.gender != "Male" && req.body.gender != "Female")
+        throw new CustomError("Please specify a valid value");
     }
 
     let updateUser = await UserModel.findOneAndUpdate(
       {
-        _id: req.params.userId,
+        _id: userId,
         isDeleted: false,
       },
       {

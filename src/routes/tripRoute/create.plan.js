@@ -8,6 +8,7 @@ import { getCurrentUnix } from "../../commons/common-functions";
 import axios from "axios";
 import { response } from "express";
 import Place from "../../models/destinationModel";
+import { createHistory } from "../historyRoute/create.history";
 function escapeXmlContent(unsafe) {
   return unsafe.replace(/[&'"]/g, function (c) {
     switch (c) {
@@ -24,14 +25,15 @@ function escapeXmlContent(unsafe) {
 export const createTripHandler = async (req, res) => {
   try {
     if (!req.query.query) throw new CustomError("Please specify a query");
-    if(!req.query.destinationId) throw new CustomError("Please specify a destination id");
+    if (!req.query.destinationId)
+      throw new CustomError("Please specify a destination id");
 
-    let dest = await Place.findOne({_id : req.query.destinationId})
+    let dest = await Place.findOne({ _id: req.query.destinationId });
 
-    if(!dest) throw new CustomError("Please specify correct destination id");
+    if (!dest) throw new CustomError("Please specify correct destination id");
 
     const requestBody = {
-      q: `Create travel plan according the [Query]. \n [AnswerSchema]: <plan><plan_title>🌲 3-day itinerary for Shimla 🌠, 🏔️ 7-Day Mussoorie Getaway 🏞️ , etc</plan_title><schedule><day>Day 1, Day 2, Day 3, etc.</day><title>Exploring Shimla's Beauty 🏞️, Shimla's Heritage and Nature 🏰🌲, etc.</title><tagline>Discover the beauty of Shimla and its charming attractions, Immerse yourself in the heritage and natural beauty of Shimla, etc.</tagline><items><item><time_slot>Morning, Afternoon, Evening, Night, etc.</time_slot><explain>Deatail explain, what we should do. Example - Visit the splendid ***Himalayan Bird Park***, ***Christ Church***, one of the oldest churches in North India. Admire its neo-gothic architecture and soothing interiors.</explain></item></items></schedule><schedule>...</schedule></plan> [END] \n [NextStep]: 1. Understand user requirements in detail and then suggest best suitable Travel plan. 2. Answer must be only in [AnswerSchema] format. Don't write anything outside of the [AnswerSchema]. 3. USE *** place, event, or entity name *** to mark the place and name. 4. Don't suggest same place, or event multiple times. [END] \n [Query]: I want to visit ${dest['place']}, ${dest['city']}, ${dest['state']}, ${dest['country']}, ${req.query.query}. \n [Plan]:`,
+      q: `Create travel plan according the [Query]. \n [AnswerSchema]: <plan><plan_title>🌲 3-day itinerary for Shimla 🌠, 🏔️ 7-Day Mussoorie Getaway 🏞️ , etc</plan_title><schedule><day>Day 1, Day 2, Day 3, etc.</day><title>Exploring Shimla's Beauty 🏞️, Shimla's Heritage and Nature 🏰🌲, etc.</title><tagline>Discover the beauty of Shimla and its charming attractions, Immerse yourself in the heritage and natural beauty of Shimla, etc.</tagline><items><item><time_slot>Morning, Afternoon, Evening, Night, etc.</time_slot><explain>Deatail explain, what we should do. Example - Visit the splendid ***Himalayan Bird Park***, ***Christ Church***, one of the oldest churches in North India. Admire its neo-gothic architecture and soothing interiors.</explain></item></items></schedule><schedule>...</schedule></plan> [END] \n [NextStep]: 1. Understand user requirements in detail and then suggest best suitable Travel plan. 2. Answer must be only in [AnswerSchema] format. Don't write anything outside of the [AnswerSchema]. 3. USE *** place, event, or entity name *** to mark the place and name. 4. Don't suggest same place, or event multiple times. [END] \n [Query]: I want to visit ${dest["place"]}, ${dest["city"]}, ${dest["state"]}, ${dest["country"]}, ${req.query.query}. \n [Plan]:`,
       group_id: "group_id",
       followUp: 1,
       limit: 0,
@@ -52,6 +54,7 @@ export const createTripHandler = async (req, res) => {
       })
       .catch((error) => {
         // Handle any errors that occurred during the API request
+        console.log(error.message);
         throw new CustomError("Something went wrong");
       });
 
@@ -62,6 +65,7 @@ export const createTripHandler = async (req, res) => {
     if (toolsStartIndex !== -1 && toolsEndIndex !== -1) {
       xml = responseData.substring(toolsStartIndex, toolsEndIndex);
     } else {
+      console.log("data not found");
       throw new CustomError("Something went wrong");
     }
     let xml2JSON = "";
@@ -79,6 +83,20 @@ export const createTripHandler = async (req, res) => {
           single["explain"] = single["explain"][0];
         }
       }
+
+      let historyData = await createHistory(
+        req.tokenData._id,
+        req.query.destinationId,
+        req.query.query,
+        { ...xml2JSON },
+        dest["place"],
+        dest["city"],
+        dest["state"],
+        dest["country"]
+      );
+
+      console.log(historyData);
+
       return res
         .status(StatusCodes.OK)
         .send(
@@ -90,6 +108,7 @@ export const createTripHandler = async (req, res) => {
           )
         );
     } catch (e) {
+      console.log(e.message);
       throw new CustomError("Something went wrong");
     }
   } catch (error) {

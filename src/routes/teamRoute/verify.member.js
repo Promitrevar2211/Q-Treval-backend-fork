@@ -18,10 +18,10 @@ export const verifyMemberHandler = async (req, res) => {
     let updateMember = await MemberModel.findOneAndUpdate(
       {
         email,
-        isDeleted: false,
+        status : "unverified"
       },
       {
-        isVerified: true,
+        status: "verified",
       },
       { new: true }
     );

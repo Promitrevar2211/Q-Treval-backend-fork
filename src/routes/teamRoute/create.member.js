@@ -8,32 +8,47 @@ import path from "path";
 import { getCurrentUnix } from "../../commons/common-functions";
 import { createMemberValidation } from "../../helpers/validations/member.validation";
 import { sendOTP } from "../../helpers/sendEmailVerification";
-
+import moment from "moment";
 export const createMemberHandler = async (req, res) => {
   try {
     await createMemberValidation.validateAsync({ ...req.body });
-    let { name, email, password } = req.body;
+    let { first_name, last_name, dob, gender, email, password } = req.body;
+
+    const dobString = dob;
+
+    let isvalid = moment(dobString, "DD/MM/YYYY", true).isValid();
+
+    if (!isvalid)
+      throw new CustomError("Please enter valid date format DD/MM/YYYY");
 
     let checkMember = await MemberModel.findOne({ email, isDeleted: false });
 
     if (checkMember) {
       throw new CustomError("Email Already Exists");
     }
-    
+
     sendOTP(email);
 
+    const [day, month, year] = dobString.split("/");
+
+    // Create a new Date object with the year, month (subtracting 1 as months are zero-based), and day
+    const formatdob = new Date(Date.UTC(year, month - 1, day));
+
     let newMember = await MemberModel.create({
-      name,
+      first_name,
+      last_name,
+      gender,
       email,
+      dob: formatdob,
       password,
-      created_at: getCurrentUnix(),
+      created_at: new Date(),
     });
 
     return res
       .status(StatusCodes.OK)
       .send(
         responseGenerators(
-          { },
+          {},
           StatusCodes.OK,
           "OTP has been sent to your email successfully",
           0
