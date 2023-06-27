@@ -16,6 +16,7 @@ import memberRoute from "./routes/teamRoute";
 import { getPlaceDetailsHandler } from "./routes/tripRoute/get.placedetails";
 import placeRoute from "./routes/destinationRoute";
 import historyRoute from "./routes/historyRoute";
+import tripDetailsRoute from "./routes/tripDetailsRoute";
 const app = express();
 const server = new http.Server(app);
 
@@ -51,12 +52,13 @@ app.use(helmet());
 //         bodyParser.json()(req, res, next);
 //     }
 // });
-app.post("/api/create-plan", authenticateUser, createTripHandler);
-app.get("/api/place-details", authenticateUser, getPlaceDetailsHandler);
+app.post("/api/create-plan", createTripHandler);
+app.get("/api/place-details", getPlaceDetailsHandler);
 app.use("/api/user", userRoute);
 app.use("/api/member", memberRoute);
 app.use("/api/place",placeRoute)
 app.use("/api/history",historyRoute);
+app.use("/api/user-trip-details",tripDetailsRoute);
 app.use((req, res, next) => {
   try {
     // set header for swagger.
