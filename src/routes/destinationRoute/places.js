@@ -7,6 +7,7 @@ import { createPlaceValidation } from "../../helpers/validations/place.validatio
 import { logsErrorAndUrl, responseGenerators } from "../../lib/utils";
 import { ValidationError } from "joi";
 import path from "path";
+import mongoose from "mongoose";
 // Middleware to handle validation errors
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
@@ -42,6 +43,26 @@ export const addPlace = async (req, res) => {
           responseGenerators({}, StatusCodes.BAD_REQUEST, error.message, 1)
         );
     }
+    // if (
+    //   error instanceof mongoose.Error.ValidationError &&
+    //   error.errors.fieldName
+    // ) {
+    //   // Custom error message for unique constraint violation
+    //   error.errors.fieldName.message =
+    //     "Custom error message: This field must be unique";
+    // }
+    // if (error.code === 11000 || error.code === 11001) {
+    //   // Unique constraint violation error
+    //   // Handle the error as needed
+    //   const customErrorMessage = `Custom error message: This ${error.errors.fieldNames[0]} must be unique`;
+    //   error.message = customErrorMessage;
+    //   return res
+    //     .status(StatusCodes.BAD_REQUEST)
+    //     .send(
+    //       responseGenerators({}, StatusCodes.BAD_REQUEST, error.message, 1)
+    //     );
+    // }
+
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .send(
@@ -86,12 +107,13 @@ export const searchPlaces = async (req, res) => {
     let where = { isDeleted: false };
     if (!search) {
       const pagination = setPagination(req.query);
-      let paginated_data = await Place.find({ ...where })
+      let paginated_data = await Place.find({ ...where, isFeatured: 1 })
         .sort({ ...pagination.sort })
         .skip(pagination.offset)
         .limit(pagination.limit);
 
-      let total_count = await Place.count({ ...where });
+      let total_count = await Place.count({ ...where, isFeatured: 1 });
+
       return res
         .status(StatusCodes.OK)
         .send(
@@ -112,8 +134,32 @@ export const searchPlaces = async (req, res) => {
           { country: new RegExp(search.toString(), "i") },
         ],
       };
-      const places = await Place.find(query);
-      res.status(200).json(places);
+      const paginated_data = await Place.find(query);
+      let total_count = await Place.count(query);
+      if (total_count === 0) {
+        return res
+        .status(StatusCodes.OK)
+        .send(
+          responseGenerators(
+            { paginated_data, total_count },
+            StatusCodes.OK,
+            "PLACE NOT FOUND",
+            1
+          )
+        );
+      } else {
+        return res
+          .status(StatusCodes.OK)
+          .send(
+            responseGenerators(
+              { paginated_data, total_count },
+              StatusCodes.OK,
+              "PLACES FOUND",
+              0
+            )
+          );
+      }
+     
     }
   } catch (error) {
     res.status(400).json({ error: error.message });

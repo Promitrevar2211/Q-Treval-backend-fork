@@ -32,9 +32,13 @@ const videoSchema = new Schema({
 
 const destinationSchema = new Schema({
   _id: { type: String, required: true, default: generatePublicId },
-  place: { type: String, required: true, unique: true },
+  place: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   city: { type: String, required: true },
-  state: { type: String, default : "" },
+  state: { type: String, default: "" },
   country: { type: String, required: true },
   pincode: { type: String, required: true },
   otherDetails: {

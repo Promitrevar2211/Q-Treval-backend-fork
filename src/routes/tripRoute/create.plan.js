@@ -9,6 +9,8 @@ import axios from "axios";
 import { response } from "express";
 import Place from "../../models/destinationModel";
 import { createHistory } from "../historyRoute/create.history";
+import { verify } from "jsonwebtoken";
+import config from "../../../config";
 function escapeXmlContent(unsafe) {
   return unsafe.replace(/[&'"]/g, function (c) {
     switch (c) {
@@ -24,6 +26,16 @@ function escapeXmlContent(unsafe) {
 
 export const createTripHandler = async (req, res) => {
   try {
+    const { authorization } = req.headers;
+    let tokenData;
+    try {
+      if (authorization) {
+        tokenData = verify(authorization, config.JWT_SECRET_KEY);
+      }
+    } catch (error) {
+      throw new CustomError("Please provide a valid token");
+    }
+
     if (!req.query.query) throw new CustomError("Please specify a query");
     if (!req.query.destinationId)
       throw new CustomError("Please specify a destination id");
@@ -85,7 +97,7 @@ export const createTripHandler = async (req, res) => {
       }
 
       let historyData = await createHistory(
-        req.tokenData._id,
+        tokenData ? tokenData._id : "guest",
         req.query.destinationId,
         req.query.query,
         { ...xml2JSON },
@@ -94,8 +106,6 @@ export const createTripHandler = async (req, res) => {
         dest["state"],
         dest["country"]
       );
-
-      console.log(historyData);
 
       return res
         .status(StatusCodes.OK)
