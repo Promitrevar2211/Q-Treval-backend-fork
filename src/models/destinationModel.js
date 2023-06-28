@@ -34,7 +34,7 @@ const destinationSchema = new Schema({
   _id: { type: String, required: true, default: generatePublicId },
   place: { type: String, required: true, unique: true },
   city: { type: String, required: true },
-  state: { type: String, required: true },
+  state: { type: String, default : "" },
   country: { type: String, required: true },
   pincode: { type: String, required: true },
   otherDetails: {
@@ -45,9 +45,10 @@ const destinationSchema = new Schema({
   popularActivities: [activitySchema],
   popularAttractions: [attractionSchema],
   videos: [videoSchema],
-  created_at : {type : Date, default : Date.now},
-  updated_at : {type : Date, default : Date.now},
-  isFeatured : {type : Number, default : 0}
+  created_at: { type: Date, default: Date.now },
+  updated_at: { type: Date, default: Date.now },
+  isFeatured: { type: Number, default: 0 },
+  isDeleted: { type: Boolean, default: false },
 });
 
 destinationSchema.index({ place: 1, city: 1, state: 1, country: 1 });

@@ -30,7 +30,7 @@ const videoSchema = Joi.object({
 export const createPlaceValidation = Joi.object({
   place: Joi.string().required(),
   city: Joi.string().required(),
-  state: Joi.string().required(),
+  state: Joi.string().optional().allow(""),
   country: Joi.string().required(),
   pincode: Joi.string().required(),
   otherDetails: Joi.object({

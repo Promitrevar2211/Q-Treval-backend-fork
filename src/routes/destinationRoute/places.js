@@ -66,7 +66,11 @@ export const getPlaces = async (req, res) => {
 
 export const deletePlace = async (req, res) => {
   try {
-    const place = await Place.findByIdAndDelete(req.params.id);
+    const place = await Place.findOneAndUpdate(
+      { _id: req.params.id, isDeleted: false },
+      { isDeleted: true },
+      { new: true }
+    );
     if (!place) {
       return res.status(404).json({ error: "Place not found" });
     }
@@ -79,14 +83,15 @@ export const deletePlace = async (req, res) => {
 export const searchPlaces = async (req, res) => {
   try {
     const { search } = req.query;
+    let where = { isDeleted: false };
     if (!search) {
       const pagination = setPagination(req.query);
-      let paginated_data = await Place.find()
+      let paginated_data = await Place.find({ ...where })
         .sort({ ...pagination.sort })
         .skip(pagination.offset)
         .limit(pagination.limit);
 
-      let total_count = await Place.count();
+      let total_count = await Place.count({ ...where });
       return res
         .status(StatusCodes.OK)
         .send(
@@ -99,6 +104,7 @@ export const searchPlaces = async (req, res) => {
         );
     } else {
       const query = {
+        ...where,
         $or: [
           { place: new RegExp(search.toString(), "i") },
           { city: new RegExp(search.toString(), "i") },
