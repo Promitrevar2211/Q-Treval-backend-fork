@@ -47,9 +47,6 @@ async function fetchWeatherData(locations) {
     return {
       location,
       weatherData: response.data,
-      weatherMessage : response.message,
-      weatherStatus : response.status,
-      weatherCode : response.code
     };
   });
 

@@ -51,17 +51,77 @@ export const addPlace = async (req, res) => {
     //   error.errors.fieldName.message =
     //     "Custom error message: This field must be unique";
     // }
-    // if (error.code === 11000 || error.code === 11001) {
-    //   // Unique constraint violation error
-    //   // Handle the error as needed
-    //   const customErrorMessage = `Custom error message: This ${error.errors.fieldNames[0]} must be unique`;
-    //   error.message = customErrorMessage;
-    //   return res
-    //     .status(StatusCodes.BAD_REQUEST)
-    //     .send(
-    //       responseGenerators({}, StatusCodes.BAD_REQUEST, error.message, 1)
-    //     );
+    if (error.code === 11000 || error.code === 11001) {
+      // Unique constraint violation error
+      // Handle the error as needed
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .send(
+          responseGenerators({}, StatusCodes.BAD_REQUEST, error.message, 1)
+        );
+    }
+
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .send(
+        responseGenerators(
+          {},
+          StatusCodes.INTERNAL_SERVER_ERROR,
+          "Internal Server Error",
+          1
+        )
+      );
+  }
+};
+
+export const getSinglePlace = async (req, res) => {
+  try {
+    if (!req.params.placeId)
+      throw new CustomError("Error,Please provide a place id");
+
+    let place = await Place.findOne({
+      _id: req.params.placeId,
+      isDeleted: false,
+    });
+
+    if (!place) throw new CustomError(`Error, place not found`);
+
+    return res.status(StatusCodes.OK).send(
+      responseGenerators(
+        {
+          place,
+        },
+        StatusCodes.OK,
+        "PLACE FOUND SUCCESSFULLY",
+        0
+      )
+    );
+  } catch (error) {
+    logsErrorAndUrl(req, error, path.basename(__filename));
+    if (error instanceof ValidationError || error instanceof CustomError) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .send(
+          responseGenerators({}, StatusCodes.BAD_REQUEST, error.message, 1)
+        );
+    }
+    // if (
+    //   error instanceof mongoose.Error.ValidationError &&
+    //   error.errors.fieldName
+    // ) {
+    //   // Custom error message for unique constraint violation
+    //   error.errors.fieldName.message =
+    //     "Custom error message: This field must be unique";
     // }
+    if (error.code === 11000 || error.code === 11001) {
+      // Unique constraint violation error
+      // Handle the error as needed
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .send(
+          responseGenerators({}, StatusCodes.BAD_REQUEST, error.message, 1)
+        );
+    }
 
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
@@ -138,15 +198,15 @@ export const searchPlaces = async (req, res) => {
       let total_count = await Place.count(query);
       if (total_count === 0) {
         return res
-        .status(StatusCodes.OK)
-        .send(
-          responseGenerators(
-            { paginated_data, total_count },
-            StatusCodes.OK,
-            "PLACE NOT FOUND",
-            1
-          )
-        );
+          .status(StatusCodes.OK)
+          .send(
+            responseGenerators(
+              { paginated_data, total_count },
+              StatusCodes.OK,
+              "PLACE NOT FOUND",
+              1
+            )
+          );
       } else {
         return res
           .status(StatusCodes.OK)
@@ -159,7 +219,6 @@ export const searchPlaces = async (req, res) => {
             )
           );
       }
-     
     }
   } catch (error) {
     res.status(400).json({ error: error.message });

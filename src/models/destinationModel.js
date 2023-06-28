@@ -53,6 +53,8 @@ const destinationSchema = new Schema({
   updated_at: { type: Date, default: Date.now },
   isFeatured: { type: Number, default: 0 },
   isDeleted: { type: Boolean, default: false },
+  taglines: { type: [String], default: [] },
+  itinerary_plan_suggestions: { type: [String], default: [] },
 });
 
 destinationSchema.index({ place: 1, city: 1, state: 1, country: 1 });

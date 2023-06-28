@@ -6,6 +6,28 @@ import path from "path";
 import moment from "moment";
 import { createTripDetailsValidation } from "../../helpers/validations/tripDetails.validation";
 import tripDetailsModel from "../../models/userTripDetailsModel";
+import nodemailer from "nodemailer";
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 587, // or the port number provided by your SMTP provider
+  secure: false, // Set it to true if you are using a secure connection (TLS/SSL)
+  auth: {
+    user: "bootesoft@gmail.com",
+    pass: "hdwyruzyuvkepocd",
+  },
+});
+
+function sendFormEmail(data) {
+  const mailOptions = {
+    from: "bootesoft@gmail.com",
+    to: "arpitsh018@gmail.com",
+    subject: "New Trip Details Form Submitted",
+    text: `Name : ${data.name}\nEmail : ${data.email}\nPhone : ${data.phoneNo}\nPlace : ${data.place}\nCity: ${data.city}\nState : ${data.state}\nCountry : ${data.country}\nTravel Type : ${data.travel_type}\nGoing Date : ${data.going_travel_date.toDateString()}\nReturn Date : ${data.return_travel_date.toDateString()}\nFlight Type : ${data.flight_type}\nBook Hotel : ${data.book_hotel}`,
+  };
+
+  transporter.sendMail(mailOptions);
+}
+
 export const createTripDetailsHandler = async (req, res) => {
   try {
     await createTripDetailsValidation.validateAsync({ ...req.body });
@@ -34,7 +56,8 @@ export const createTripDetailsHandler = async (req, res) => {
       throw new CustomError("Please enter valid going date format DD/MM/YYYY");
 
     const [day, month, year] = goingDate.split("/");
-    const formatgoing = new Date(Date.UTC(year, month - 1, day));
+    let formatgoing = new Date(Date.UTC(year, month - 1, day));
+    formatgoing.setHours(0, 0, 0, 0);
     let formatreturn;
     if (return_travel_date) {
       const returnDate = return_travel_date;
@@ -48,17 +71,18 @@ export const createTripDetailsHandler = async (req, res) => {
 
       const [day, month, year] = returnDate.split("/");
       formatreturn = new Date(Date.UTC(year, month - 1, day));
+      formatreturn.setHours(0, 0, 0, 0);
     }
 
     let newDetails = await tripDetailsModel.create({
-      user_id : req.tokenData._id,
+      user_id: req.tokenData._id,
       name,
       email,
       phoneNo,
       destinationId,
       travel_type,
-      going_travel_date : formatgoing,
-      return_travel_date : formatreturn,
+      going_travel_date: formatgoing,
+      return_travel_date: formatreturn,
       flight_type,
       book_hotel,
       place,
@@ -67,6 +91,8 @@ export const createTripDetailsHandler = async (req, res) => {
       country,
       created_at: new Date(),
     });
+
+    sendFormEmail(newDetails);
 
     return res
       .status(StatusCodes.OK)

@@ -43,5 +43,7 @@ export const createPlaceValidation = Joi.object({
   videos: Joi.array().items(videoSchema),
   created_at: Joi.date().default(Date.now),
   updated_at: Joi.date().default(Date.now),
-  isFeatured: Joi.number().default(0)
+  isFeatured: Joi.number().default(0),
+  taglines: Joi.array().items(Joi.string().optional()).optional(),
+  itinerary_plan_suggestions: Joi.array().items(Joi.string().optional()).optional()
 });
