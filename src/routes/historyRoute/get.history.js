@@ -53,7 +53,7 @@ export const getListHistoryHandler = async (req, res) => {
   try {
     const pagination = setPagination(req.query);
 
-    let { user_id, place, city, state, country } = req.query;
+    let { user_id, search, place, city, state, country } = req.query;
     let where = {};
 
     if (user_id) {
@@ -63,6 +63,18 @@ export const getListHistoryHandler = async (req, res) => {
     }
 
     let options = [];
+
+    if (search) {
+      where = {
+        ...where,
+        $or: [
+          { place: new RegExp(search.toString(), "i") },
+          { city: new RegExp(search.toString(), "i") },
+          { state: new RegExp(search.toString(), "i") },
+          { country: new RegExp(search.toString(), "i") },
+        ],
+      };
+    }
 
     if (place) {
       let placeArray = place.split(",");
@@ -92,7 +104,11 @@ export const getListHistoryHandler = async (req, res) => {
       options.push({ country: { $in: regexArray } });
     }
 
-    where = { ...where, $or: options };
+    if (!place && !city && !state && !country) {
+      where = { ...where };
+    } else {
+      where = { ...where, $or: options };
+    }
 
     let paginated_data = await HistoryModel.find({ ...where })
       .sort({ ...pagination.sort })
