@@ -7,6 +7,8 @@ import moment from "moment";
 import { createTripDetailsValidation } from "../../helpers/validations/tripDetails.validation";
 import tripDetailsModel from "../../models/userTripDetailsModel";
 import nodemailer from "nodemailer";
+import { verify } from "jsonwebtoken";
+import config from "../../../config";
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 587, // or the port number provided by your SMTP provider
@@ -30,6 +32,17 @@ function sendFormEmail(data) {
 
 export const createTripDetailsHandler = async (req, res) => {
   try {
+
+    const { authorization } = req.headers;
+    let tokenData;
+    try {
+      if (authorization) {
+        tokenData = verify(authorization, config.JWT_SECRET_KEY);
+      }
+    } catch (error) {
+      throw new CustomError("Please provide a valid token");
+    }
+
     await createTripDetailsValidation.validateAsync({ ...req.body });
 
     let {
@@ -75,7 +88,7 @@ export const createTripDetailsHandler = async (req, res) => {
     }
 
     let newDetails = await tripDetailsModel.create({
-      user_id: req.tokenData._id,
+      user_id: tokenData ? tokenData._id : "guest",
       name,
       email,
       phoneNo,

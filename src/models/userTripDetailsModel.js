@@ -15,7 +15,7 @@ const tripDetailsSchema = {
   book_hotel : {type : String, required : true, enum : ['Yes','No'], default : "Yes"},
   place: { type: String, required :true, default: "" },
   city: { type: String, required :true,  default: "" },
-  state: { type: String, required :true,  default: "" },
+  state: { type: String, default: "" },
   country: { type: String, required :true,  default: "" },
   isDeleted : {type : Boolean, default : false},
   created_at: { type: Date, default: Date.now },

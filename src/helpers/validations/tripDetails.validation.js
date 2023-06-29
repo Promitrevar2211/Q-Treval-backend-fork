@@ -18,7 +18,7 @@ export const createTripDetailsValidation = Joi.object({
   book_hotel: Joi.string().required().valid("Yes", "No"),
   place: Joi.string().required(),
   city: Joi.string().required(),
-  state: Joi.string().required(),
+  state: Joi.string().optional().allow(""),
   country: Joi.string().required(),
 });
 

@@ -8,7 +8,7 @@ import { updateTripDetailsHandler } from "./update.details";
 
 const tripDetailsRoute = Router();
 
-tripDetailsRoute.post("/create-detail",authenticateUser,createTripDetailsHandler);
+tripDetailsRoute.post("/create-detail",createTripDetailsHandler);
 tripDetailsRoute.put("/update-detail/:tripId",authenticateUser,authenticateAdmin,updateTripDetailsHandler);
 tripDetailsRoute.delete("/delete-detail/:tripId",authenticateUser,authenticateAdmin,deleteTripDetailsHandler);
 tripDetailsRoute.get("/single-detail/:tripId",authenticateUser,authenticateOnlyMember,getSingleTripDetailsHandler);
