@@ -12,6 +12,7 @@ import { google } from "googleapis";
 import keys from "../../lib/keys.json";
 import config from "../../../config";
 import { auth } from "google-auth-library";
+//import SibApiV3Sdk from "sib-api-v3-sdk";
 // const client = new google.auth.JWT(keys.client_email, null, keys.private_key, [
 //   "https://www.googleapis.com/auth/spreadsheets",
 // ]);
@@ -73,10 +74,49 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// function sendEmail2() {
+//   SibApiV3Sdk.ApiClient.instance.authentications["api-key"].apiKey =
+//     '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';
+
+//   new SibApiV3Sdk.TransactionalEmailsApi()
+//     .sendTransacEmail({
+//       sender: { email: "booking@qxlabai.com", name: "Booking AI" },
+//       subject: "This is my default subject line",
+//       htmlContent:
+//         "<!DOCTYPE html><html><body><h1>My First Heading</h1><p>My first paragraph.</p></body></html>",
+//       params: {
+//         greeting: "This is the default greeting",
+//         headline: "This is the default headline",
+//       },
+//       messageVersions: [
+//         //Definition for Message Version 1
+//         {
+//           to: [
+//             {
+//               email: "kartikkhatana1@gmail.com",
+//               name: "Kartik Khatana",
+//             },
+//           ],
+//           htmlContent:
+//             "<!DOCTYPE html><html><body><h1>Modified header!</h1><p>This is still a paragraph</p></body></html>",
+//           subject: "We are happy to be working with you",
+//         },
+//       ],
+//     })
+//     .then(
+//       function (data) {
+//         console.log(data);
+//       },
+//       function (error) {
+//         console.error(error);
+//       }
+//     );
+// }
+
 function sendFormEmail(data) {
   const mailOptions = {
     from: "bootesoft@gmail.com",
-    to: "arpitsh018@gmail.com",
+    to: "booking@quantumtravel.ai",
     subject: "New Trip Details Form Submitted",
     text: `Name : ${data.name}\nEmail : ${data.email}\nPhone : ${
       data.phoneNo
@@ -85,6 +125,17 @@ function sendFormEmail(data) {
     }\nGoing Date : ${data.going_travel_date.toDateString()}\nReturn Date : ${
       data.return_travel_date ? data.return_travel_date.toDateString() : ""
     }\nFlight Type : ${data.flight_type}\nBook Hotel : ${data.book_hotel}`,
+  };
+
+  transporter.sendMail(mailOptions);
+}
+
+function sendCustomerEmail(email) {
+  const mailOptions = {
+    from: "bootesoft@gmail.com",
+    to: email,
+    subject: "Thank You for Your Query",
+    text: `Thank You for your Query. Our travel concierge will contact you in the next 30 minutes.\nFor any other communication please contact us at booking@quantumtravel.ai.`,
   };
 
   transporter.sendMail(mailOptions);
@@ -139,7 +190,7 @@ export const createTripDetailsHandler = async (req, res) => {
 
     const [day, month, year] = goingDate.split("/");
     let formatgoing = new Date(Date.UTC(year, month - 1, day));
-   // formatgoing.setHours(0, 0, 0, 0);
+    // formatgoing.setHours(0, 0, 0, 0);
     let formatreturn;
     if (return_travel_date) {
       const returnDate = return_travel_date;
@@ -153,7 +204,7 @@ export const createTripDetailsHandler = async (req, res) => {
 
       const [day, month, year] = returnDate.split("/");
       formatreturn = new Date(Date.UTC(year, month - 1, day));
-     // formatreturn.setHours(0, 0, 0, 0);
+      // formatreturn.setHours(0, 0, 0, 0);
     }
 
     let newDetails = await tripDetailsModel.create({
@@ -176,6 +227,8 @@ export const createTripDetailsHandler = async (req, res) => {
     });
 
     sendFormEmail(newDetails);
+    sendCustomerEmail(email);
+    //sendEmail2();
 
     // writeData();
 
