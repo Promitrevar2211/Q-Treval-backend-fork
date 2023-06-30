@@ -53,7 +53,7 @@ export const getListHistoryHandler = async (req, res) => {
   try {
     const pagination = setPagination(req.query);
 
-    let { user_id, search, place, city, state, country } = req.query;
+    let { user_id, search } = req.query;
     let where = {};
 
     if (user_id) {
@@ -62,60 +62,53 @@ export const getListHistoryHandler = async (req, res) => {
       };
     }
 
-    let options = [];
-
     if (search) {
       where = {
         ...where,
-        $or: [
-          { place: new RegExp(search.toString(), "i") },
-          { city: new RegExp(search.toString(), "i") },
-          { state: new RegExp(search.toString(), "i") },
-          { country: new RegExp(search.toString(), "i") },
-        ],
+        location: new RegExp(search.toString(), "i"),
       };
     }
 
-    if (place) {
-      let placeArray = place.split(",");
-      const regexArray = placeArray.map((item) => new RegExp(item, "i"));
-      options.push({ place: { $in: regexArray } });
-      //   where = {
-      //     ...where,
-      //     place: { $in: regexArray },
-      //   };
-    }
+    // if (place) {
+    //   let placeArray = place.split(",");
+    //   const regexArray = placeArray.map((item) => new RegExp(item, "i"));
+    //   options.push({ place: { $in: regexArray } });
+    //   //   where = {
+    //   //     ...where,
+    //   //     place: { $in: regexArray },
+    //   //   };
+    // }
 
-    if (city) {
-      let cityArray = city.split(",");
-      const regexArray = cityArray.map((item) => new RegExp(item, "i"));
-      options.push({ city: { $in: regexArray } });
-    }
+    // if (city) {
+    //   let cityArray = city.split(",");
+    //   const regexArray = cityArray.map((item) => new RegExp(item, "i"));
+    //   options.push({ city: { $in: regexArray } });
+    // }
 
-    if (state) {
-      let stateArray = state.split(",");
-      const regexArray = stateArray.map((item) => new RegExp(item, "i"));
-      options.push({ state: { $in: regexArray } });
-    }
+    // if (state) {
+    //   let stateArray = state.split(",");
+    //   const regexArray = stateArray.map((item) => new RegExp(item, "i"));
+    //   options.push({ state: { $in: regexArray } });
+    // }
 
-    if (country) {
-      let countryArray = country.split(",");
-      const regexArray = countryArray.map((item) => new RegExp(item, "i"));
-      options.push({ country: { $in: regexArray } });
-    }
+    // if (country) {
+    //   let countryArray = country.split(",");
+    //   const regexArray = countryArray.map((item) => new RegExp(item, "i"));
+    //   options.push({ country: { $in: regexArray } });
+    // }
 
-    if (!place && !city && !state && !country) {
-      where = { ...where };
-    } else {
-      where = { ...where, $or: options };
-    }
+    // if (!place && !city && !state && !country) {
+    //   where = { ...where };
+    // } else {
+    //   where = { ...where, $or: options };
+    // }
 
     let paginated_data = await HistoryModel.find({ ...where })
       .sort({ ...pagination.sort })
       .skip(pagination.offset)
       .limit(pagination.limit);
 
-    let total_count = await HistoryModel.count(where);
+    let total_count = await HistoryModel.count({...where});
     return res
       .status(StatusCodes.OK)
       .send(

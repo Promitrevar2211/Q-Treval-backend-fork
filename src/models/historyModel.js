@@ -6,11 +6,12 @@ const historySchema = {
   user_id: { type: String, required: true },
   query: { type: String, required: true },
   response: { type: Object, required: true },
-  destinationId : {type : String, required : true},
-  place : {type : String, default : ""},
-  city: { type: String, default: "" },
-  state: { type: String, default: "" },
-  country: { type: String, default: "" },
+  location : {type : String, required : true},
+  // destinationId : {type : String, required : true},
+  // place : {type : String, default : ""},
+  // city: { type: String, default: "" },
+  // state: { type: String, default: "" },
+  // country: { type: String, default: "" },
   created_at: { type: Date, default: Date.now },
 };
 

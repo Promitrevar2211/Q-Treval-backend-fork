@@ -8,7 +8,61 @@ import { createTripDetailsValidation } from "../../helpers/validations/tripDetai
 import tripDetailsModel from "../../models/userTripDetailsModel";
 import nodemailer from "nodemailer";
 import { verify } from "jsonwebtoken";
+import { google } from "googleapis";
+import keys from "../../lib/keys.json";
 import config from "../../../config";
+import { auth } from "google-auth-library";
+// const client = new google.auth.JWT(keys.client_email, null, keys.private_key, [
+//   "https://www.googleapis.com/auth/spreadsheets",
+// ]);
+
+// async function gsrun(cl) {
+//   const gsapi = google.sheets({ version: "v4", auth: cl });
+
+//   let spreadsheetId = "Sheet1"; // add your spreadsheet id here
+
+//   let createSpreadsheet = false;
+//   try {
+//     await gsapi.spreadsheets.get({ spreadsheetId });
+//   } catch (err) {
+//     if (err.code === 404) {
+//       createSpreadsheet = true;
+//     } else {
+//       throw err;
+//     }
+//   }
+
+//   if (createSpreadsheet) {
+//     const request = {
+//       resource: {
+//         properties: {
+//           title: "My Sheet",
+//         },
+//       },
+//     };
+
+//     const response = (await gsapi.spreadsheets.create(request)).data;
+//     spreadsheetId = response.spreadsheetId;
+//     console.log(`Spreadsheet ID: ${spreadsheetId}`);
+//   }
+
+//   let data = [
+//     ["Name", "Age", "Gender"],
+//     ["John", "20", "Male"],
+//     ["Emma", "30", "Female"],
+//   ]; // data to be appended
+
+//   const updateOptions = {
+//     spreadsheetId,
+//     range: "Sheet1!A1",
+//     valueInputOption: "USER_ENTERED",
+//     resource: { values: data },
+//   };
+
+//   let res = await gsapi.spreadsheets.values.append(updateOptions);
+//   console.log("res");
+// }
+
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 587, // or the port number provided by your SMTP provider
@@ -24,15 +78,29 @@ function sendFormEmail(data) {
     from: "bootesoft@gmail.com",
     to: "arpitsh018@gmail.com",
     subject: "New Trip Details Form Submitted",
-    text: `Name : ${data.name}\nEmail : ${data.email}\nPhone : ${data.phoneNo}\nPlace : ${data.place}\nCity: ${data.city}\nState : ${data.state}\nCountry : ${data.country}\nTravel Type : ${data.travel_type}\nGoing Date : ${data.going_travel_date.toDateString()}\nReturn Date : ${data.return_travel_date.toDateString()}\nFlight Type : ${data.flight_type}\nBook Hotel : ${data.book_hotel}`,
+    text: `Name : ${data.name}\nEmail : ${data.email}\nPhone : ${
+      data.phoneNo
+    }\nDestination : ${data.destination}\nTravel Type : ${
+      data.travel_type
+    }\nGoing Date : ${data.going_travel_date.toDateString()}\nReturn Date : ${
+      data.return_travel_date ? data.return_travel_date.toDateString() : ""
+    }\nFlight Type : ${data.flight_type}\nBook Hotel : ${data.book_hotel}`,
   };
 
   transporter.sendMail(mailOptions);
 }
 
+// async function writeData() {
+//   const client = await auth.fromJSON(keys);
+
+//   client.scopes = ["https://www.googleapis.com/auth/spreadsheets"];
+//   await client.authorize();
+
+//   gsrun(client);
+// }
+
 export const createTripDetailsHandler = async (req, res) => {
   try {
-
     const { authorization } = req.headers;
     let tokenData;
     try {
@@ -49,16 +117,17 @@ export const createTripDetailsHandler = async (req, res) => {
       name,
       email,
       phoneNo,
-      destinationId,
+      destination,
+      // destinationId,
       travel_type,
       going_travel_date,
       return_travel_date,
       flight_type,
       book_hotel,
-      place,
-      city,
-      state,
-      country,
+      // place,
+      // city,
+      // state,
+      // country,
     } = req.body;
 
     const goingDate = going_travel_date;
@@ -70,7 +139,7 @@ export const createTripDetailsHandler = async (req, res) => {
 
     const [day, month, year] = goingDate.split("/");
     let formatgoing = new Date(Date.UTC(year, month - 1, day));
-    formatgoing.setHours(0, 0, 0, 0);
+   // formatgoing.setHours(0, 0, 0, 0);
     let formatreturn;
     if (return_travel_date) {
       const returnDate = return_travel_date;
@@ -84,7 +153,7 @@ export const createTripDetailsHandler = async (req, res) => {
 
       const [day, month, year] = returnDate.split("/");
       formatreturn = new Date(Date.UTC(year, month - 1, day));
-      formatreturn.setHours(0, 0, 0, 0);
+     // formatreturn.setHours(0, 0, 0, 0);
     }
 
     let newDetails = await tripDetailsModel.create({
@@ -92,20 +161,33 @@ export const createTripDetailsHandler = async (req, res) => {
       name,
       email,
       phoneNo,
-      destinationId,
+      //destinationId,
+      destination,
       travel_type,
       going_travel_date: formatgoing,
       return_travel_date: formatreturn,
       flight_type,
       book_hotel,
-      place,
-      city,
-      state,
-      country,
+      // place,
+      // city,
+      // state,
+      // country,
       created_at: new Date(),
     });
 
     sendFormEmail(newDetails);
+
+    // writeData();
+
+    // client.authorize(function (err, tokens) {
+    //   if (err) {
+    //     console.log(err);
+    //     return;
+    //   } else {
+    //     console.log("Connected!");
+    //     gsrun(client);
+    //   }
+    // });
 
     return res
       .status(StatusCodes.OK)

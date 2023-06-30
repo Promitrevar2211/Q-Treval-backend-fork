@@ -18,6 +18,7 @@ import placeRoute from "./routes/destinationRoute";
 import historyRoute from "./routes/historyRoute";
 import tripDetailsRoute from "./routes/tripDetailsRoute";
 import { homePageHandler } from "./routes/homePageRoute/homePage";
+import { searchCityHandler } from "./routes/searchCityRoute/searchCity";
 const app = express();
 const server = new http.Server(app);
 
@@ -61,6 +62,7 @@ app.use("/api/place",placeRoute)
 app.use("/api/history",historyRoute);
 app.use("/api/user-trip-details",tripDetailsRoute);
 app.get("/api/home-page",homePageHandler);
+//app.get("/api/city-search",searchCityHandler);
 app.use((req, res, next) => {
   try {
     // set header for swagger.

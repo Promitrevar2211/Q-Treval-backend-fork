@@ -4,7 +4,8 @@ export const createTripDetailsValidation = Joi.object({
   name: Joi.string().required(),
   email: Joi.string().required(),
   phoneNo: Joi.string().required(),
-  destinationId: Joi.string().required(),
+  destination : Joi.string().required(),
+ // destinationId: Joi.string().required(),
   travel_type: Joi.string().required().valid("One Way", "Return"),
   going_travel_date: Joi.string().required(),
   return_travel_date: Joi.string().when('travel_type', {
@@ -16,10 +17,10 @@ export const createTripDetailsValidation = Joi.object({
     .required()
     .valid("Economy", "Business", "First Class"),
   book_hotel: Joi.string().required().valid("Yes", "No"),
-  place: Joi.string().required(),
-  city: Joi.string().required(),
-  state: Joi.string().optional().allow(""),
-  country: Joi.string().required(),
+  // place: Joi.string().required(),
+  // city: Joi.string().required(),
+  // state: Joi.string().optional().allow(""),
+  // country: Joi.string().required(),
 });
 
 export const updateTripDetailsValidation = Joi.object({
@@ -28,7 +29,8 @@ export const updateTripDetailsValidation = Joi.object({
   name: Joi.string().optional(),
   email: Joi.string().optional(),
   phoneNo: Joi.string().optional(),
-  destinationId: Joi.string().optional(),
+  destination : Joi.string().optional(),
+ // destinationId: Joi.string().optional(),
   travel_type: Joi.string().optional().valid("One Way", "Return"),
   going_travel_date: Joi.string().optional(),
   return_travel_date: Joi.string().optional(),
@@ -36,8 +38,8 @@ export const updateTripDetailsValidation = Joi.object({
     .optional()
     .valid("Economy", "Business", "First Class"),
   book_hotel: Joi.string().optional().valid("Yes", "No"),
-  place: Joi.string().optional(),
-  city: Joi.string().optional(),
-  state: Joi.string().optional(),
-  country: Joi.string().optional(),
+  // place: Joi.string().optional(),
+  // city: Joi.string().optional(),
+  // state: Joi.string().optional(),
+  // country: Joi.string().optional(),
 });
