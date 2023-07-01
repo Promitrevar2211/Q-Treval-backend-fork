@@ -31,6 +31,7 @@
     "express-validator": "^7.0.1",
     "get-current-line": "^6.6.0",
     "google-auth-library": "^8.9.0",
+    "google-libphonenumber": "^3.2.32",
     "googleapis": "^120.0.0",
     "helmet": "^7.0.0",
     "http-status-codes": "^2.2.0",
