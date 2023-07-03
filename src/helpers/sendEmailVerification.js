@@ -7,49 +7,21 @@ const transporter = nodemailer.createTransport({
   port: 587, // or the port number provided by your SMTP provider
   secure: false, // Set it to true if you are using a secure connection (TLS/SSL)
   auth: {
-    user: "bootesoft@gmail.com",
-    pass: "hdwyruzyuvkepocd",
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASSWORD,
   },
 });
 let otpData = {};
 // Function to send the verification email
 function sendVerificationEmail(userEmail, verificationCode) {
   const mailOptions = {
-    from: "bootesoft@gmail.com",
+    from: process.env.EMAIL_USER,
     to: userEmail,
     subject: "Email Verification",
     text: `Your Email Verification OTP is : ${verificationCode}`,
   };
 
   transporter.sendMail(mailOptions);
-}
-
-function sendVerificationEmail2(userEmail,verificationCode) {
-  SibApiV3Sdk.ApiClient.instance.authentications["api-key"].apiKey =
-      "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";
-
-    new SibApiV3Sdk.TransactionalEmailsApi()
-      .sendTransacEmail({
-        sender: { email: "booking@quantumtravel.ai", name: "Quantum Travels" },
-        subject: `Email Verification`,
-        textContent: `Your Email Verification OTP is : ${verificationCode}`,
-        messageVersions: [
-          //Definition for Message Version 1
-          {
-            to: [
-              {
-                email: userEmail,
-              },
-            ],
-          },
-        ],
-      })
-      .then(
-        async function (res) {
-        },
-        async function (error) {
-        }
-      );
 }
 
 export async function sendOTP(userEmail) {
@@ -60,8 +32,7 @@ export async function sendOTP(userEmail) {
       upperCaseAlphabets: false,
       specialChars: false,
     });
-   // sendVerificationEmail(userEmail, otp);
-    sendVerificationEmail2(userEmail,otp);
+    sendVerificationEmail(userEmail, otp);
 
     // Store the OTP code with its expiration timestamp
     const otpExpiration = Date.now() + 5 * 60 * 1000; // Expiration set to 5 minutes from now
@@ -97,7 +68,7 @@ export function verifyOTP(userEmail, otp) {
 
     return false;
   } catch (error) {
-    throw new CustomError("OTP verification failed. Please try again!")
+    throw new CustomError("OTP verification failed. Please try again!");
   }
   // OTP is incorrect
 }

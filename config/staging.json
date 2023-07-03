@@ -1,18 +1,21 @@
 {
-    "SYS_APP_CNF": {
-        "sender_email": "contact@apttechsols.com",
-        "receiver_email": "arpitsh018@gmail.com",
-        "site_name": "Media360",
-        "site_address": { "city": "Bengaluru", "country": "India" },
-        "contact_email": "contact@apttechsols.com",
-        "social": {
-            "twitter": "https://twitter.com/apttechsols",
-            "facebook": "https://www.facebook.com/apttechsols",
-            "linkedin": "https://www.linkedin.com/company/apttechsols/",
-            "instagram": "https://www.facebook.com/apttechsols"
-        },
-        "sender_email_name": "Media360 <contact@apttechsols.com>"
+  "SYS_APP_CNF": {
+    "sender_email": "booking@qxlabai.com",
+    "receiver_email": "arpitsh018@gmail.com",
+    "site_name": "Media360",
+    "site_address": { "city": "Bengaluru", "country": "India" },
+    "contact_email": "booking@qxlabai.com",
+    "social": {
+      "twitter": "https://twitter.com/apttechsols",
+      "facebook": "https://www.facebook.com/apttechsols",
+      "linkedin": "https://www.linkedin.com/company/apttechsols/",
+      "instagram": "https://www.facebook.com/apttechsols"
     },
-    "PRIVATE_API_KEY": "si51inptQaBvh6ZzGvI1iaOl8JtJYqWmGbnyVj994Nk=",
-    "DATABASE_CONNECTION_URI_DEV": "mongodb+srv://dsoul-travel:8gPNQvpnMj3HSPSt@dsoul-travel.f6dvugd.mongodb.net/dsoul-travel"
+    "sender_email_name": "Media360 <booking@qxlabai.com>"
+  },
+  "PRIVATE_API_KEY": "si51inptQaBvh6ZzGvI1iaOl8JtJYqWmGbnyVj994Nk=",
+  "DATABASE_CONNECTION_URI_DEV": "mongodb+srv://dsoul-travel:8gPNQvpnMj3HSPSt@dsoul-travel.f6dvugd.mongodb.net/dsoul-travel",
+  "GOOGLE_SERVICE_ACCOUNT_EMAIL": "quantum-travels@quantum-travels-391610.iam.gserviceaccount.com",
+  "GOOGLE_PRIVATE_KEY": "2abc8a50af15949c1c19f0ae6c2c938971b3e2d4",
+  "GOOGLE_SHEET_ID": "1cWrS1Xamabj1xd1YKgsGhxAnldKaC06j3zIaH14SIw4"
 }

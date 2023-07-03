@@ -27,6 +27,10 @@ const configVariables = {
   BASIC: config.get("BASIC"),
   PREMIUM: config.get("PREMIUM"),
   SSO_SERVER_JWT_URL: config.get("SSO_SERVER_JWT_URL"),
+  GOOGLE_SERVICE_ACCOUNT_EMAIL:
+    "quantum-travels@quantum-travels-391610.iam.gserviceaccount.com",
+  GOOGLE_PRIVATE_KEY: "2abc8a50af15949c1c19f0ae6c2c938971b3e2d4",
+  GOOGLE_SHEET_ID: "1cWrS1Xamabj1xd1YKgsGhxAnldKaC06j3zIaH14SIw4",
 };
 
 export default configVariables;
