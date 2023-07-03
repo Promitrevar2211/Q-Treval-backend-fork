@@ -19,7 +19,6 @@ import historyRoute from "./routes/historyRoute";
 import tripDetailsRoute from "./routes/tripDetailsRoute";
 import { homePageHandler } from "./routes/homePageRoute/homePage";
 import { searchCityHandler } from "./routes/searchCityRoute/searchCity";
-import { google } from "googleapis";
 const app = express();
 const server = new http.Server(app);
 
@@ -44,7 +43,6 @@ const limiter = rateLimit({
 
 app.use(limiter);
 app.use(helmet());
-app.set("view engine", "ejs");
 // app.use(express.static('public'))
 //Strip
 
