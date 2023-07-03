@@ -37,37 +37,47 @@ function isValidNumber(phoneNumber, countryCode) {
 }
 
 async function sendEmailToVendor(data) {
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
-    to: "booking@quantumtravel.ai",
-    subject: `New Customer Booking Details - ${data.destination} Trip`,
-    text: `Dear Admin,\n\nWe have received a new booking request from a customer who wishes to travel to ${
-      data.destination
-    }. Below are the details provided by the customer:\n\nName: ${
-      data.name
-    }\nEmail: ${data.email}\nPhone: ${data.phoneNo}\n\nDestination: ${
-      data.destination
-    }\n\nTravel Type: ${
-      data.travel_type
-    }\n\nFrom: ${data.going_travel_date.toDateString()}\nTo: ${
-      data.return_travel_date ? data.return_travel_date.toDateString() : "N/A"
-    }\n\nFlight Type: ${data.flight_type}\n\nHotel Booking: ${
-      data.book_hotel
-    }\n`,
-  };
+  try {
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: "booking@quantumtravel.ai",
+      subject: `New Customer Booking Details - ${data.destination} Trip`,
+      text: `Dear Admin,\n\nWe have received a new booking request from a customer who wishes to travel to ${
+        data.destination
+      }. Below are the details provided by the customer:\n\nName: ${
+        data.name
+      }\nEmail: ${data.email}\nPhone: ${data.phoneNo}\n\nDestination: ${
+        data.destination
+      }\n\nTravel Type: ${
+        data.travel_type
+      }\n\nFrom: ${data.going_travel_date.toDateString()}\nTo: ${
+        data.return_travel_date ? data.return_travel_date.toDateString() : "N/A"
+      }\n\nFlight Type: ${data.flight_type}\n\nHotel Booking: ${
+        data.book_hotel
+      }\n`,
+    };
 
-  transporter.sendMail(mailOptions);
+    transporter.sendMail(mailOptions);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 async function sendEmailToCustomer(data) {
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
-    to: data.email,
-    subject: `Thank You for Your Query`,
-    text: `Thank You for your Query. Our travel concierge will contact you in the next 30 minutes.\nFor any other communication please contact us at booking@quantumtravel.ai\n`,
-  };
+  try {
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: data.email,
+      subject: `Thank You for Your Query`,
+      text: `Thank You for your Query. Our travel concierge will contact you in the next 30 minutes.\nFor any other communication please contact us at booking@quantumtravel.ai\n`,
+    };
 
-  transporter.sendMail(mailOptions);
+    transporter.sendMail(mailOptions);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 export const createTripDetailsHandler = async (req, res) => {
@@ -142,8 +152,32 @@ export const createTripDetailsHandler = async (req, res) => {
       created_at: new Date(),
     });
 
-    sendEmailToVendor(newDetails);
-    sendEmailToCustomer({ email: email });
+    let SendEmailToVendor = await sendEmailToVendor(newDetails);
+    if (!SendEmailToVendor) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .send(
+          responseGenerators(
+            {},
+            StatusCodes.BAD_REQUEST,
+            "UNABLE TO SEND EMAIL",
+            1
+          )
+        );
+    }
+    let SendEmailToCustomer = await sendEmailToCustomer({ email: email });
+    if (!SendEmailToCustomer) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .send(
+          responseGenerators(
+            {},
+            StatusCodes.BAD_REQUEST,
+            "UNABLE TO SEND EMAIL",
+            1
+          )
+        );
+    }
 
     return res
       .status(StatusCodes.OK)
