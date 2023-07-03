@@ -19,6 +19,7 @@ import historyRoute from "./routes/historyRoute";
 import tripDetailsRoute from "./routes/tripDetailsRoute";
 import { homePageHandler } from "./routes/homePageRoute/homePage";
 import { searchCityHandler } from "./routes/searchCityRoute/searchCity";
+import { google } from "googleapis";
 const app = express();
 const server = new http.Server(app);
 
@@ -43,6 +44,7 @@ const limiter = rateLimit({
 
 app.use(limiter);
 app.use(helmet());
+app.set("view engine", "ejs");
 // app.use(express.static('public'))
 //Strip
 
@@ -58,10 +60,10 @@ app.post("/api/create-plan", createTripHandler);
 app.get("/api/place-details", getPlaceDetailsHandler);
 app.use("/api/user", userRoute);
 app.use("/api/member", memberRoute);
-app.use("/api/place",placeRoute)
-app.use("/api/history",historyRoute);
-app.use("/api/user-trip-details",tripDetailsRoute);
-app.get("/api/home-page",homePageHandler);
+app.use("/api/place", placeRoute);
+app.use("/api/history", historyRoute);
+app.use("/api/user-trip-details", tripDetailsRoute);
+app.get("/api/home-page", homePageHandler);
 //app.get("/api/city-search",searchCityHandler);
 app.use((req, res, next) => {
   try {
@@ -106,7 +108,6 @@ const health = async (req, res) => {
 };
 
 app.get("/", health);
-
 app.use((req, res) => {
   return res
     .status(StatusCodes.INTERNAL_SERVER_ERROR)
