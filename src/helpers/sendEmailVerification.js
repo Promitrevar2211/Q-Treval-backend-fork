@@ -1,16 +1,8 @@
 import nodemailer from "nodemailer";
 import otpGenerator from "otp-generator";
 import { CustomError } from "./custome.error";
-import SibApiV3Sdk from "sib-api-v3-sdk";
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587, // or the port number provided by your SMTP provider
-  secure: false, // Set it to true if you are using a secure connection (TLS/SSL)
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD,
-  },
-});
+import { transporter } from "./mailTransporter";
+
 let otpData = {};
 // Function to send the verification email
 function sendVerificationEmail(userEmail, verificationCode) {

@@ -11,6 +11,7 @@ import { verify } from "jsonwebtoken";
 import config from "../../../config";
 import { PhoneNumberFormat, PhoneNumberUtil } from "google-libphonenumber";
 import emailResponseModel from "../../models/emailResponseModel";
+import { transporter } from "../../helpers/mailTransporter";
 
 function getCountryCodeFromNumber(phoneNumber) {
   try {
@@ -35,19 +36,9 @@ function isValidNumber(phoneNumber, countryCode) {
   }
 }
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587, // or the port number provided by your SMTP provider
-  secure: false, // Set it to true if you are using a secure connection (TLS/SSL)
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD,
-  },
-});
-
 async function sendEmailToVendor(data) {
   const mailOptions = {
-    from: "booking@qxlabai.com",
+    from: process.env.EMAIL_USER,
     to: "booking@quantumtravel.ai",
     subject: `New Customer Booking Details - ${data.destination} Trip`,
     text: `Dear Admin,\n\nWe have received a new booking request from a customer who wishes to travel to ${
@@ -70,7 +61,7 @@ async function sendEmailToVendor(data) {
 
 async function sendEmailToCustomer(data) {
   const mailOptions = {
-    from: "booking@qxlabai.com",
+    from: process.env.EMAIL_USER,
     to: data.email,
     subject: `Thank You for Your Query`,
     text: `Thank You for your Query. Our travel concierge will contact you in the next 30 minutes.\nFor any other communication please contact us at booking@quantumtravel.ai\n`,
