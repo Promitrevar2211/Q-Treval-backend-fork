@@ -283,10 +283,10 @@ export const autocomplete = async (req, res) => {
 
         if (data.status === "OK") {
           data = data.predictions.map((item) => {
-            const requiredTypes = ["locality", "political", "geocode"];
-            const hasAllValues = requiredTypes.every((val) =>
-              item.types.includes(val)
-            );
+            // const requiredTypes = ["locality", "political", "geocode"];
+            // const hasAllValues = requiredTypes.every((val) =>
+            //   item.types.includes(val)
+            // );
             // if (!hasAllValues) return;
             return {
               place: item.description,
@@ -297,7 +297,6 @@ export const autocomplete = async (req, res) => {
               },
             };
           });
-          if (item.types) types;
         } else {
           data = [];
         }
