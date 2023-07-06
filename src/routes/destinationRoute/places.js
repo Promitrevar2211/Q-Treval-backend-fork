@@ -287,7 +287,7 @@ export const autocomplete = async (req, res) => {
             const hasAllValues = requiredTypes.every((val) =>
               item.types.includes(val)
             );
-            if (!hasAllValues) return;
+            // if (!hasAllValues) return;
             return {
               place: item.description,
               place_id: item.place_id,
