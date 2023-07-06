@@ -265,7 +265,7 @@ export const autocomplete = async (req, res) => {
           method: "GET",
           hostname: "place-autocomplete1.p.rapidapi.com",
           port: null,
-          path: "/autocomplete/json?input=jai&radius=2000",
+          path: `/autocomplete/json?input=${search}&radius=2000`,
           headers: {
             "X-RapidAPI-Key": config.RAPID_API_KEY,
             "X-RapidAPI-Host": "place-autocomplete1.p.rapidapi.com",
