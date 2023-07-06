@@ -282,21 +282,23 @@ export const autocomplete = async (req, res) => {
           });
 
         if (data.status === "OK") {
-          data = data.predictions.map((item) => {
-            // const requiredTypes = ["locality", "political", "geocode"];
-            // const hasAllValues = requiredTypes.every((val) =>
-            //   item.types.includes(val)
-            // );
-            // if (!hasAllValues) return;
-            return {
-              place: item.description,
-              place_id: item.place_id,
-              formatting: {
-                main_text: item.structured_formatting.main_text,
-                secondary_text: item.structured_formatting.secondary_text,
-              },
-            };
-          });
+          data = data.predictions
+            .map((item) => {
+              const requiredTypes = ["locality", "political", "geocode"];
+              const hasAllValues = requiredTypes.every((val) =>
+                item.types.includes(val)
+              );
+              if (!hasAllValues) return;
+              return {
+                place: item.description,
+                place_id: item.place_id,
+                formatting: {
+                  main_text: item.structured_formatting.main_text,
+                  secondary_text: item.structured_formatting.secondary_text,
+                },
+              };
+            })
+            .filter(Boolean);
         } else {
           data = [];
         }
