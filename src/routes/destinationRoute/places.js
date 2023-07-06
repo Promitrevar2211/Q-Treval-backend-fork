@@ -305,9 +305,7 @@ export const autocomplete = async (req, res) => {
         }
         return res
           .status(StatusCodes.OK)
-          .send(
-            responseGenerators({ data: data }, StatusCodes.OK, "Place found", 0)
-          );
+          .send(responseGenerators(data, StatusCodes.OK, "Place found", 0));
       } catch (error) {
         return res
           .status(StatusCodes.NOT_FOUND)
