@@ -8,6 +8,11 @@ import { logsErrorAndUrl, responseGenerators } from "../../lib/utils";
 import { ValidationError } from "joi";
 import path from "path";
 import mongoose from "mongoose";
+import dotenv from "dotenv";
+import config from "../../../config";
+import http from "https";
+import { json } from "body-parser";
+
 // Middleware to handle validation errors
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
@@ -219,6 +224,108 @@ export const searchPlaces = async (req, res) => {
             )
           );
       }
+    }
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+export const autocomplete = async (req, res) => {
+  try {
+    if (!req.params.search)
+      throw new CustomError("Please start typing city name1");
+
+    const search = req.params.search;
+
+    if (search != null && search.length > 0) {
+      async function httpRequest(options) {
+        return new Promise((resolve, reject) => {
+          const req = http.request(options, (res) => {
+            const chunks = [];
+
+            res.on("data", (chunk) => chunks.push(chunk));
+            res.on("end", () => {
+              const body = Buffer.concat(chunks).toString();
+              try {
+                const jsonData = JSON.parse(body);
+                resolve(jsonData);
+              } catch (err) {
+                reject(err);
+              }
+            });
+            res.on("error", reject);
+          });
+
+          req.on("error", reject);
+          req.end();
+        });
+      }
+      try {
+        const options = {
+          method: "GET",
+          hostname: "place-autocomplete1.p.rapidapi.com",
+          port: null,
+          path: "/autocomplete/json?input=jai&radius=2000",
+          headers: {
+            "X-RapidAPI-Key": config.RAPID_API_KEY,
+            "X-RapidAPI-Host": "place-autocomplete1.p.rapidapi.com",
+          },
+        };
+
+        let data;
+        await httpRequest(options)
+          .then((response_data) => {
+            data = response_data;
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+
+        if (data.status === "OK") {
+          data = data.predictions.map((item) => {
+            return {
+              place: item.description,
+              place_id: item.place_id,
+              formatting: {
+                main_text: item.structured_formatting.main_text,
+                secondary_text: item.structured_formatting.secondary_text,
+              },
+            };
+          });
+        } else {
+          data = [];
+        }
+
+        if (data.length === 0) {
+          return res
+            .status(StatusCodes.NOT_FOUND)
+            .send(
+              responseGenerators({}, StatusCodes.NOT_FOUND, "No place found", 0)
+            );
+        }
+        return res
+          .status(StatusCodes.OK)
+          .send(
+            responseGenerators({ data: data }, StatusCodes.OK, "Place found", 0)
+          );
+      } catch (error) {
+        return res
+          .status(StatusCodes.NOT_FOUND)
+          .send(
+            responseGenerators({}, StatusCodes.NOT_FOUND, "No place found", 0)
+          );
+      }
+    } else {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .send(
+          responseGenerators(
+            {},
+            StatusCodes.BAD_REQUEST,
+            "Please start typing city name2",
+            0
+          )
+        );
     }
   } catch (error) {
     res.status(400).json({ error: error.message });
