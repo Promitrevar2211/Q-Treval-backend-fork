@@ -284,11 +284,15 @@ export const autocomplete = async (req, res) => {
         if (data.status === "OK") {
           data = data.predictions
             .map((item) => {
-              const requiredTypes = ["locality", "political", "geocode"];
-              const hasAllValues = requiredTypes.every((val) =>
-                item.types.includes(val)
+              const requiredValuesSets = [
+                ["country", "political", "geocode"],
+                ["locality", "political", "geocode"],
+                ["administrative_area_level_1", "political", "geocode"],
+              ];
+              const hasRequiredValues = requiredValuesSets.some((set) =>
+                set.every((val) => item.types.includes(val))
               );
-              if (!hasAllValues) return;
+              if (!hasRequiredValues) return;
               return {
                 place: item.description,
                 place_id: item.place_id,
