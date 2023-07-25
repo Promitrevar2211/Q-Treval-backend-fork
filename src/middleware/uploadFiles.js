@@ -1,9 +1,9 @@
 import dotenv from 'dotenv';
 import multer from 'multer';
 import path from 'path';
-import { maxFileSize} from '../commons/global-constants';
+import { maxFileSize} from '../commons/global-constants.js';
 
-import { FileTypeIssue } from '../helpers/custome.error'
+import { FileTypeIssue } from '../helpers/custome.error.js'
 
 dotenv.config();
 

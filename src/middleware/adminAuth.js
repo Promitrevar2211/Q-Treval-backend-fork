@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
-import { ERROR } from "../commons/global-constants";
-import { logsErrorAndUrl, responseGenerators } from "../lib/utils";
+import { ERROR } from "../commons/global-constants.js";
+import { logsErrorAndUrl, responseGenerators } from "../lib/utils.js";
 
 export const authenticateAdmin = async (req, res, next) => {
   try {

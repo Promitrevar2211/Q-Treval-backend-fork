@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { generatePublicId } from "../commons/common-functions";
+import { generatePublicId } from "../commons/common-functions.js";
 
 const { Schema } = mongoose;
 

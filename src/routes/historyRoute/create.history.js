@@ -1,4 +1,4 @@
-import HistoryModel from "../../models/historyModel";
+import HistoryModel from "../../models/historyModel.js";
 export async function createHistory(
   userid,
   query,

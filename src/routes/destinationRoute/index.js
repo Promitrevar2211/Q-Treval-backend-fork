@@ -7,9 +7,9 @@ import {
   getSinglePlace,
   searchPlaces,
   autocomplete,
-} from "./places";
-import { authenticateUser } from "../../middleware/authorization";
-import { authenticateAdmin } from "../../middleware/adminAuth";
+} from "./places.js";
+import { authenticateUser } from "../../middleware/authorization.js";
+import { authenticateAdmin } from "../../middleware/adminAuth.js";
 
 const placeRoute = Router();
 

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import * as dotenv from 'dotenv';
-import config from '../../config'
+import config from '../../config/index.js'
 dotenv.config();
 
 // Setup mongodb
@@ -27,6 +27,7 @@ const dbConfig = configs[process.env.NODE_ENV || 'development'].connection;
 
 /** Connect to Mongo */
 export const mongooseConnection = async () => {
+  console.log(dbConfig);
   return await mongoose.connect(dbConfig, { retryWrites: true, w: 'majority' });
 };
 

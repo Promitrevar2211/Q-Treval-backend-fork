@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "lint": "npx eslint .",
     "start": "webpack --config webpack.config.js & node dist/index.js",

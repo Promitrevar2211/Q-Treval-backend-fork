@@ -1,12 +1,12 @@
 import { StatusCodes } from "http-status-codes";
-import { CustomError } from "../../helpers/custome.error";
-import { logsErrorAndUrl, responseGenerators } from "../../lib/utils";
-import { ValidationError } from "joi";
+import { CustomError } from "../../helpers/custome.error.js";
+import { logsErrorAndUrl, responseGenerators } from "../../lib/utils.js";
+import Joi from "joi";
 import path from "path";
-import UserModel from "../../models/userModel";
-import { sign } from "jsonwebtoken";
-import config from "../../../config";
-import { loginUserValidation } from "../../helpers/validations/user.validation";
+import UserModel from "../../models/userModel.js";
+import jsonwebtoken from "jsonwebtoken" ;
+import config from "../../../config/index.js";
+import { loginUserValidation } from "../../helpers/validations/user.validation.js";
 export const userLoginHandler = async (req, res) => {
   try {
     await loginUserValidation.validateAsync({ ...req.body });
@@ -19,7 +19,7 @@ export const userLoginHandler = async (req, res) => {
 
     if (!userData.isVerified) throw new CustomError(`Please verify your email`);
 
-    let newjwt = sign({ _id: userData._id }, config.JWT_SECRET_KEY);
+    let newjwt = jsonwebtoken.sign ({ _id: userData._id }, config.JWT_SECRET_KEY);
 
     return res
       .status(StatusCodes.OK)
@@ -33,7 +33,7 @@ export const userLoginHandler = async (req, res) => {
       );
   } catch (error) {
     logsErrorAndUrl(req, error, path.basename(__filename));
-    if (error instanceof ValidationError || error instanceof CustomError) {
+    if (error instanceof Joi.ValidationError || error instanceof CustomError) {
       return res
         .status(StatusCodes.BAD_REQUEST)
         .send(

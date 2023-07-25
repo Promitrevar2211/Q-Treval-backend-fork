@@ -1,23 +1,23 @@
 import { StatusCodes } from "http-status-codes";
 import dotenv from "dotenv";
-import config from "../../../config";
+import config from "../../../config/index.js";
 import AWS, { S3 } from "aws-sdk";
 import * as path from "path";
-import { ValidationError } from "joi";
+import Joi from "joi";
 import {
   ERROR,
   FILE_MESSAGE,
   maxFileSize,
   validFile,
-} from "../../commons/global-constants";
+} from "../../commons/global-constants.js";
 import {
   logsError,
   logsErrorAndUrl,
   responseGenerators,
   responseValidation,
 } from "../../lib/utils";
-import { generatePublicId } from "../../commons/common-functions";
-import { CustomError, FileTypeIssue } from "../../helpers/custome.error";
+import { generatePublicId } from "../../commons/common-functions.js";
+import { CustomError, FileTypeIssue } from "../../helpers/custome.error.js";
 
 dotenv.config();
 

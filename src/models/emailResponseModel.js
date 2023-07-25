@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { generatePublicId } from "../commons/common-functions";
+import { generatePublicId } from "../commons/common-functions.js";
 
 const emailResponseSchema = {
   _id: { type: String, default: generatePublicId, required: true },

@@ -1,11 +1,11 @@
 import { StatusCodes } from "http-status-codes";
-import { CustomError } from "../../helpers/custome.error";
-import { logsErrorAndUrl, responseGenerators } from "../../lib/utils";
-import { ValidationError } from "joi";
+import { CustomError } from "../../helpers/custome.error.js";
+import { logsErrorAndUrl, responseGenerators } from "../../lib/utils.js";
+import Joi from "joi";
 import path from "path";
 import moment from "moment";
-import { updateTripDetailsValidation } from "../../helpers/validations/tripDetails.validation";
-import tripDetailsModel from "../../models/userTripDetailsModel";
+import { updateTripDetailsValidation } from "../../helpers/validations/tripDetails.validation.js";
+import tripDetailsModel from "../../models/userTripDetailsModel.js";
 export const updateTripDetailsHandler = async (req, res) => {
   try {
     let tripId = req.params.tripId;
@@ -66,7 +66,7 @@ export const updateTripDetailsHandler = async (req, res) => {
       );
   } catch (error) {
     logsErrorAndUrl(req, error, path.basename(__filename));
-    if (error instanceof ValidationError || error instanceof CustomError) {
+    if (error instanceof Joi.ValidationError || error instanceof CustomError) {
       return res
         .status(StatusCodes.BAD_REQUEST)
         .send(

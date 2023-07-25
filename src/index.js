@@ -3,22 +3,22 @@ import * as bodyParser from "body-parser";
 import http from "http";
 import { rateLimit } from "express-rate-limit";
 import { StatusCodes } from "http-status-codes";
-import { responseValidation } from "./lib/utils";
-import logger from "./lib/logger";
+import { responseValidation } from "./lib/utils.js";
+import logger from "./lib/logger/index.js";
 import helmet from "helmet";
 import cors from "cors";
-import config from "../config";
-import { createTripHandler } from "./routes/tripRoute/create.plan";
+import config from "../config/index.js";
+import { createTripHandler } from "./routes/tripRoute/create.plan.js";
 import { create } from "domain";
-import userRoute from "./routes/userRoute";
-import { authenticateUser } from "./middleware/authorization";
-import memberRoute from "./routes/teamRoute";
-import { getPlaceDetailsHandler } from "./routes/tripRoute/get.placedetails";
-import placeRoute from "./routes/destinationRoute";
-import historyRoute from "./routes/historyRoute";
-import tripDetailsRoute from "./routes/tripDetailsRoute";
-import { homePageHandler } from "./routes/homePageRoute/homePage";
-import { searchCityHandler } from "./routes/searchCityRoute/searchCity";
+import userRoute from "./routes/userRoute/index.js";
+import { authenticateUser } from "./middleware/authorization.js";
+import memberRoute from "./routes/teamRoute/index.js";
+import { getPlaceDetailsHandler } from "./routes/tripRoute/get.placedetails.js";
+import placeRoute from "./routes/destinationRoute/index.js";
+import historyRoute from "./routes/historyRoute/index.js";
+import tripDetailsRoute from "./routes/tripDetailsRoute/index.js";
+import { homePageHandler } from "./routes/homePageRoute/homePage.js";
+import { searchCityHandler } from "./routes/searchCityRoute/searchCity.js";
 const app = express();
 const server = new http.Server(app);
 
@@ -30,8 +30,8 @@ if (process.env.NODE_ENV !== "development") {
   app.use(cors({ origin: "*" }));
 }
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(express.urlencoded());
+app.use(express.json());
 
 const limiter = rateLimit({
   windowMs: 5 * 60 * 1000, // 5 minutes

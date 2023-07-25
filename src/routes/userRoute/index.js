@@ -1,13 +1,13 @@
 import { Router } from "express";
-import { createUserHandler } from "./create.user";
-import { getListUserHandler, getSingleUserHandler } from "./get.user";
-import { updateUserHandler } from "./update.user";
-import { deleteUserHandler } from "./delete.user";
-import { authenticateOnlyMember, authenticateUser } from "../../middleware/authorization";
-import { authenticateAdmin } from "../../middleware/adminAuth";
-import { userLoginHandler } from "./login.user";
-import { verifyUserHandler } from "./verify.user";
-import { otpHandler } from "./send.otp";
+import { createUserHandler } from "./create.user.js";
+import { getListUserHandler, getSingleUserHandler } from "./get.user.js";
+import { updateUserHandler } from "./update.user.js";
+import { deleteUserHandler } from "./delete.user.js";
+import { authenticateOnlyMember, authenticateUser } from "../../middleware/authorization.js";
+import { authenticateAdmin } from "../../middleware/adminAuth.js";
+import { userLoginHandler } from "./login.user.js";
+import { verifyUserHandler } from "./verify.user.js";
+import { otpHandler } from "./send.otp.js";
 
 const userRoute = Router();
 

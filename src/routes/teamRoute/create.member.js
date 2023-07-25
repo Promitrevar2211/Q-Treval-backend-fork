@@ -1,13 +1,13 @@
-import { MEMBER_MESSAGE } from "../../commons/global-constants";
-import MemberModel from "../../models/memberModel";
+import { MEMBER_MESSAGE } from "../../commons/global-constants.js";
+import MemberModel from "../../models/memberModel.js";
 import { StatusCodes } from "http-status-codes";
-import { CustomError } from "../../helpers/custome.error";
-import { logsErrorAndUrl, responseGenerators } from "../../lib/utils";
-import { ValidationError } from "joi";
+import { CustomError } from "../../helpers/custome.error.js";
+import { logsErrorAndUrl, responseGenerators } from "../../lib/utils.js";
+import Joi from "joi";
 import path from "path";
-import { getCurrentUnix } from "../../commons/common-functions";
-import { createMemberValidation } from "../../helpers/validations/member.validation";
-import { sendOTP } from "../../helpers/sendEmailVerification";
+import { getCurrentUnix } from "../../commons/common-functions.js";
+import { createMemberValidation } from "../../helpers/validations/member.validation.js";
+import { sendOTP } from "../../helpers/sendEmailVerification.js";
 import moment from "moment";
 export const createMemberHandler = async (req, res) => {
   try {
@@ -56,7 +56,7 @@ export const createMemberHandler = async (req, res) => {
       );
   } catch (error) {
     logsErrorAndUrl(req, error, path.basename(__filename));
-    if (error instanceof ValidationError || error instanceof CustomError) {
+    if (error instanceof Joi.ValidationError || error instanceof CustomError) {
       return res
         .status(StatusCodes.BAD_REQUEST)
         .send(

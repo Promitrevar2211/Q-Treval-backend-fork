@@ -1,10 +1,10 @@
-import { USER_MESSAGE } from "../../commons/global-constants";
+import { USER_MESSAGE } from "../../commons/global-constants.js";
 import { StatusCodes } from "http-status-codes";
-import { CustomError } from "../../helpers/custome.error";
-import { logsErrorAndUrl, responseGenerators } from "../../lib/utils";
-import { ValidationError } from "joi";
+import { CustomError } from "../../helpers/custome.error.js";
+import { logsErrorAndUrl, responseGenerators } from "../../lib/utils.js";
+import Joi from "joi";
 import path from "path";
-import UserModel from "../../models/userModel";
+import UserModel from "../../models/userModel.js";
 
 export const deleteUserHandler = async (req, res) => {
   try {
@@ -39,7 +39,7 @@ export const deleteUserHandler = async (req, res) => {
       );
   } catch (error) {
     logsErrorAndUrl(req, error, path.basename(__filename));
-    if (error instanceof ValidationError || error instanceof CustomError) {
+    if (error instanceof Joi.Joi.ValidationError || error instanceof CustomError) {
       return res
         .status(StatusCodes.BAD_REQUEST)
         .send(

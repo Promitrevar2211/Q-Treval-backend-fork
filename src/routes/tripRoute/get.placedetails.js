@@ -1,7 +1,7 @@
 import { StatusCodes } from "http-status-codes";
-import { CustomError } from "../../helpers/custome.error";
-import { logsErrorAndUrl, responseGenerators } from "../../lib/utils";
-import { ValidationError } from "joi";
+import { CustomError } from "../../helpers/custome.error.js";
+import { logsErrorAndUrl, responseGenerators } from "../../lib/utils.js";
+import Joi from "joi";
 import path from "path";
 import axios from "axios";
 import { response } from "express";
@@ -34,7 +34,7 @@ export const getPlaceDetailsHandler = async (req, res) => {
     return res.status(StatusCodes.OK).send(responseData);
   } catch (error) {
     logsErrorAndUrl(req, error, path.basename(__filename));
-    if (error instanceof ValidationError || error instanceof CustomError) {
+    if (error instanceof Joi.ValidationError || error instanceof CustomError) {
       return res
         .status(StatusCodes.BAD_REQUEST)
         .send(

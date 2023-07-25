@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { generatePublicId } from "../commons/common-functions";
+import { generatePublicId } from "../commons/common-functions.js";
 
 const tripDetailsSchema = {
   _id: { type: String, default: generatePublicId, required: true },
@@ -10,6 +10,7 @@ const tripDetailsSchema = {
   from: { type: String, required: false, default: "" },
   destination: { type: String, required: true },
   no_of_travellers: { type: Number, required: true, default: 1 },
+  notes: { type: Array, default: []},
   travel_type: {
     type: String,
     required: true,
