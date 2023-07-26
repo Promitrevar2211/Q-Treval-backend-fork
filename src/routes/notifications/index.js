@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {getNotifications} from "./get.notifications";
+import {getNotifications} from "./get.notifications.js";
 import { authenticateUser } from "../../middleware/authorization.js";
 import { authenticateAdmin } from "../../middleware/adminAuth.js";
 

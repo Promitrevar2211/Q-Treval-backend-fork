@@ -16,6 +16,7 @@ const userSchema = {
   password: { type: String, required: true },
   isDeleted: { type: Boolean, required: true, default: false },
   isVerified: { type: Boolean, required: true, default: false },
+  notifications: {type: Array, default:[]},
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },
 };

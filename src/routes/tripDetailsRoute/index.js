@@ -22,6 +22,6 @@ tripDetailsRoute.patch("/add-notes/:id",addNotes);
 tripDetailsRoute.get("/notes/:id",getNotes);
 tripDetailsRoute.delete("/notes/:tripId/:noteId", deleteNotes);
 tripDetailsRoute.put("/notes/:id",updateNotes);
-tripDetailsRoute.post("/upload",upload.single('file'),addDocuments);
+tripDetailsRoute.post("/upload/:tripId/:userId",upload.single('file'),addDocuments);
 
 export default tripDetailsRoute;

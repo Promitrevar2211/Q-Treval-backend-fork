@@ -2,7 +2,6 @@ import dotenv from 'dotenv';
 import multer from 'multer';
 import path from 'path';
 import { maxFileSize} from '../commons/global-constants.js';
-
 import { FileTypeIssue } from '../helpers/custome.error.js'
 
 dotenv.config();
@@ -17,8 +16,8 @@ export const upload = multer({
   fileFilter: function (req, file, callback) {
     var ext = path.extname(file.originalname);
     console.log(ext);
-    if (ext != '.jpeg' && ext != '.jpg' && ext != '.png') {
-      return callback(new FileTypeIssue('Error, Only jpeg, jpg or png file is allowed'), false)
+    if (ext != '.jpeg' && ext != '.jpg' && ext != '.png' && ext != '.pdf') {
+      return callback(new FileTypeIssue('Error, Only jpeg, jpg or png or pdf files are allowed'), false)
     }
     callback(null, true)
   },

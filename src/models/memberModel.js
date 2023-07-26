@@ -20,6 +20,7 @@ const memberSchema = {
     default: "unverified",
     enum: ["unverified", "verified", "approved", "deleted"],
   },
+  notifications: {type: Array, default:[]},
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },
 };
