@@ -16,6 +16,7 @@ import memberRoute from "./routes/teamRoute/index.js";
 import { getPlaceDetailsHandler } from "./routes/tripRoute/get.placedetails.js";
 import placeRoute from "./routes/destinationRoute/index.js";
 import historyRoute from "./routes/historyRoute/index.js";
+import notificationRoute from "./routes/notifications/index.js";
 import tripDetailsRoute from "./routes/tripDetailsRoute/index.js";
 import { homePageHandler } from "./routes/homePageRoute/homePage.js";
 import { searchCityHandler } from "./routes/searchCityRoute/searchCity.js";
@@ -61,6 +62,7 @@ app.use("/api/member", memberRoute);
 app.use("/api/place", placeRoute);
 app.use("/api/history", historyRoute);
 app.use("/api/user-trip-details", tripDetailsRoute);
+app.use("/api/notifications",notificationRoute);
 app.get("/api/home-page", homePageHandler);
 //app.get("/api/city-search",searchCityHandler);
 app.use((req, res, next) => {
