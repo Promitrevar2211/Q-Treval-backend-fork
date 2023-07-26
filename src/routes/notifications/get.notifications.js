@@ -12,10 +12,15 @@ export const getNotifications = async(req,res) =>{
             active: true,
         });
         return res
-        .status(StatusCodes.OK)
-        .send(
-            responseGenerators(weather, StatusCodes.OK, "HOME PAGE LOADED", 0)
-        );
+      .status(StatusCodes.OK)
+      .send(
+        responseGenerators(
+          { result },
+          StatusCodes.OK,
+          "NOTIFICATIONS FETCHED SUCCESSFULLY",
+          0
+        )
+      );
     }catch(error){
         return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)

@@ -15,7 +15,7 @@ export const notificationSender = async (data) => {
             const user =await UserModel.findOne({_id:id});
             if(user){
                 await UserModel.findOneAndUpdate({_id:id},{
-                    notifications: [...user.notifications,notification._id]
+                    notifications: [...user.notifications,{id:notification._id,read: false}]
                 },{new: true});
             }
         }
@@ -26,3 +26,57 @@ export const notificationSender = async (data) => {
       return error;
     }
   };
+
+  export const markRead = async(req,res) => {
+        try{
+            let result;
+            const member = await MemberModel.findOne({_id: req.params.userId});
+            if(member){
+                const newNotifications = member.notifications.filter(item => item.id != req.params.notificationId);
+                result = await MemberModel.findOneAndUpdate({
+                    _id: id,
+                },{
+                    notifications: [...newNotifications,{id: req.params.notificationId,read:true}]
+                },
+                {
+                    new: true
+                });
+            }
+            else{
+                const user = await UserModel.findOne({_id: id});
+                if(user){
+                    const newNotifications = member.notifications.filter(item => item.id != req.params.notificationId);
+                    result = await MemberModel.findOneAndUpdate({
+                        _id: id,
+                    },{
+                        notifications: [...newNotifications,{id: req.params.notificationId,read:true}]
+                    },
+                    {
+                        new: true
+                    });
+                }
+            }
+            return res
+            .status(StatusCodes.OK)
+            .send(
+                responseGenerators(
+                { result },
+                StatusCodes.OK,
+                "NOTIFICATION MARKED READ SUCCESSFULLY",
+                0
+                )
+            );
+        }
+        catch(error){
+            return res
+                .status(StatusCodes.INTERNAL_SERVER_ERROR)
+                .send(
+                    responseGenerators(
+                    {},
+                    StatusCodes.INTERNAL_SERVER_ERROR,
+                    "Internal Server Error",
+                    1
+                    )
+                );
+        }
+  }
