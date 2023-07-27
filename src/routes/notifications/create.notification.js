@@ -1,14 +1,19 @@
 import notificationModel from "../../models/notificationModel.js";
 import MemberModel from "../../models/memberModel.js";
 import UserModel from "../../models/userModel.js";
+import { StatusCodes } from "http-status-codes";
+import {
+    responseGenerators,
+  } from "../../lib/utils.js";
+
 export const notificationSender = async (data) => {
-    try {
+    
       const notification = await notificationModel.create({...data});
       const result = await Promise.all(data.receiver_id.map(async(id)=>{
         const member = await MemberModel.findOne({_id:id});
         if(member){
             await MemberModel.findOneAndUpdate({_id:id},{
-                notifications: [...member.notifications,notification._id]
+                notifications: [...member.notifications,{id:notification._id,read: false}]
             },{new: true});
         }
         else{
@@ -20,11 +25,6 @@ export const notificationSender = async (data) => {
             }
         }
       }));
-      return notification;
-    } catch (error) {
-      // set logs Error function
-      return error;
-    }
   };
 
   export const markRead = async(req,res) => {
@@ -32,9 +32,10 @@ export const notificationSender = async (data) => {
             let result;
             const member = await MemberModel.findOne({_id: req.params.userId});
             if(member){
+                console.log(member);
                 const newNotifications = member.notifications.filter(item => item.id != req.params.notificationId);
                 result = await MemberModel.findOneAndUpdate({
-                    _id: id,
+                    _id: req.params.userId,
                 },{
                     notifications: [...newNotifications,{id: req.params.notificationId,read:true}]
                 },
@@ -43,11 +44,11 @@ export const notificationSender = async (data) => {
                 });
             }
             else{
-                const user = await UserModel.findOne({_id: id});
+                const user = await UserModel.findOne({_id: req.params.userId});
                 if(user){
                     const newNotifications = member.notifications.filter(item => item.id != req.params.notificationId);
                     result = await MemberModel.findOneAndUpdate({
-                        _id: id,
+                        _id: req.params.userId,
                     },{
                         notifications: [...newNotifications,{id: req.params.notificationId,read:true}]
                     },

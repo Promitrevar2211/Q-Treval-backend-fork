@@ -1,6 +1,7 @@
 import express from "express";
+import { Server } from 'socket.io';
+import http from 'http';
 import * as bodyParser from "body-parser";
-import http from "http";
 import { rateLimit } from "express-rate-limit";
 import { StatusCodes } from "http-status-codes";
 import { responseValidation } from "./lib/utils.js";
@@ -22,6 +23,29 @@ import { homePageHandler } from "./routes/homePageRoute/homePage.js";
 import { searchCityHandler } from "./routes/searchCityRoute/searchCity.js";
 const app = express();
 const server = new http.Server(app);
+
+//Chat server
+const chatServer = http.createServer(app);
+const io = new Server(chatServer);
+
+io.on('connection', (socket) => {
+  console.log('new user connected');
+  let name;
+  socket.on('joining msg', (username) => {
+  	name = username;
+  	io.emit('chat message', `---${name} joined the chat---`);
+  });
+  
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+    io.emit('chat message', `---${name} left the chat---`);
+    
+  });
+  socket.on('chat message', (msg) => {
+    socket.broadcast.emit('chat message', msg);         //sending message to all except the sender
+  });
+});
+
 
 // eslint-disable-next-line no-undef
 if (process.env.NODE_ENV !== "development") {

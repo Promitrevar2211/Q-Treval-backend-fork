@@ -22,7 +22,7 @@ export const addDocuments = async(req,res) => {
         const receiver_ids = members.map((item)=>item._id);
         if(result){
            
-            const notification= await notificationSender({
+           await notificationSender({
                 title: "Document uploaded",
                 description: `${first_name} ${last_name} uploaded the document for tripId:${req.params.tripId} at ${moment().toString()}.`,
                 sender_id: req.params.userId,
