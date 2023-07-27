@@ -9,13 +9,13 @@ export const verifyDocuments = async(req,res) => {
     try{
         const { docId, memberId } = req.params;
         const { isAccepted, reason } = req.body;
-        const document = await documentsModel.findOne({ _id: docId});
+        const document = await documentsModel.findOne({ uploaded_for: docId});
         let result;
         if(document){
             const user = await UserModel.findOne({ _id:document.uploaded_by });
             const receiver_ids = [user._id]; 
             if(isAccepted){
-                result=await documentsModel.findByIdAndUpdate({_id: docId},{is_verified: true}, {new: true});
+                result=await documentsModel.findByIdAndUpdate({_id: document._id},{is_verified: true}, {new: true});
                 await notificationSender({
                     title: "Document Verified Successfully",
                     description: `Hoorah! Your Documents are verified by our team sucessfully get your bags packed!!`,
@@ -24,7 +24,7 @@ export const verifyDocuments = async(req,res) => {
                 });
             }
             else{
-                result = await documentsModel.findOneAndDelete({_id: docId}); 
+                result = await documentsModel.findOneAndDelete({_id: document._id}); 
                 await notificationSender({
                     title: "Document Verification failed",
                     description: `Sorry ${user.first_name} your document verification was not successful as ${reason}`,

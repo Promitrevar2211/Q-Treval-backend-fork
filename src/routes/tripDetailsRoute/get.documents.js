@@ -4,12 +4,14 @@ import { responseGenerators } from "../../lib/utils.js";
 import documentsModel from "../../models/userDocumentModel.js";
 import UserModel from "../../models/userModel.js";
 import { notificationSender } from "../notifications/create.notification.js";
+import Joi from 'joi';
 
 export const getDocuments = async(req,res) => {
     try{
-        const { docId, memberId } = req.params;
-        const document = await documentsModel.findOne({ _id: docId });
+        const { tripId, memberId } = req.params;
+        const document = await documentsModel.findOne({ uploaded_for: tripId });
         if(document){
+            
             const user = await UserModel.findOne({ _id:document.uploaded_by });
             const receiver_ids = [user._id];
             await notificationSender({

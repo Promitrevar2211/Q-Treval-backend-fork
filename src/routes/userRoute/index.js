@@ -13,8 +13,8 @@ import { getUserTrips } from "./get.user.trip.history.js";
 const userRoute = Router();
 
 userRoute.post('/create-user',createUserHandler);
-userRoute.get('/single-user/:userId',authenticateUser,authenticateOnlyMember,getSingleUserHandler);
-userRoute.get('/list-user',authenticateUser,authenticateOnlyMember,getListUserHandler);
+userRoute.get('/single-user/:userId',getSingleUserHandler); //authenticateUser,authenticateOnlyMember
+userRoute.get('/list-user',getListUserHandler); //authenticateUser,authenticateOnlyMember
 userRoute.put('/update-user/:userId?',authenticateUser,updateUserHandler);
 userRoute.delete('/delete-user/:userId?',authenticateUser,deleteUserHandler);
 userRoute.get('/verify-user',verifyUserHandler);

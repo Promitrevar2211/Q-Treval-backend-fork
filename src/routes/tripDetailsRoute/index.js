@@ -29,7 +29,7 @@ tripDetailsRoute.put("/notes/:id",updateNotes);
 
 //Document Apis
 tripDetailsRoute.post("/upload/:tripId/:userId",upload.single('file'),addDocuments);
-tripDetailsRoute.get("/user-docs/:docId/:memberId",getDocuments);
+tripDetailsRoute.get("/user-docs/:tripId/:memberId",getDocuments);
 tripDetailsRoute.post("/verify-docs/:docId/:memberId",verifyDocuments);
 
 export default tripDetailsRoute;
