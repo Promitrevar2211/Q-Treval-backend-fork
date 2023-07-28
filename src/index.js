@@ -21,6 +21,7 @@ import notificationRoute from "./routes/notifications/index.js";
 import tripDetailsRoute from "./routes/tripDetailsRoute/index.js";
 import { homePageHandler } from "./routes/homePageRoute/homePage.js";
 import { searchCityHandler } from "./routes/searchCityRoute/searchCity.js";
+import fileUpload from  'express-fileupload';
 const app = express();
 const server = new http.Server(app);
 
@@ -54,7 +55,7 @@ if (process.env.NODE_ENV !== "development") {
 } else {
   app.use(cors({ origin: "*" }));
 }
-
+//app.use(fileUpload());
 app.use(express.urlencoded());
 app.use(express.json());
 

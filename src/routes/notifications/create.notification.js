@@ -7,7 +7,9 @@ import {
   } from "../../lib/utils.js";
 
 export const notificationSender = async (data) => {
-    
+       const presentNotification = await notificationModel.findOne({...data});
+       if(presentNotification) return;
+       else{
       const notification = await notificationModel.create({...data});
       const result = await Promise.all(data.receiver_id.map(async(id)=>{
         const member = await MemberModel.findOne({_id:id});
@@ -25,6 +27,7 @@ export const notificationSender = async (data) => {
             }
         }
       }));
+    }
   };
 
   export const markRead = async(req,res) => {

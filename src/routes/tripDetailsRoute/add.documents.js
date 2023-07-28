@@ -8,7 +8,9 @@ import { notificationSender } from "../notifications/create.notification.js";
 import MemberModel from "../../models/memberModel.js";
 export const addDocuments = async(req,res) => {
     try{
-        const { originalname, mimetype, buffer , size } = req.file; 
+        console.log(req.file);
+        const { originalname, mimetype, buffer , size } = req.file;
+        console.log(req.params.tripId); 
         const result =  await documentsModel.create({
             title: originalname,
             uploaded_by: req.params.userId,
