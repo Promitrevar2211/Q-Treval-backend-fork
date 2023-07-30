@@ -4,31 +4,30 @@ import { responseGenerators } from "../../lib/utils.js";
 import documentsModel from "../../models/userDocumentModel.js";
 import UserModel from "../../models/userModel.js";
 import { notificationSender } from "../notifications/create.notification.js";
+import Joi from 'joi';
 
 export const verifyDocuments = async(req,res) => {
     try{
-        const { docId, memberId } = req.params;
-        const { isAccepted, reason } = req.body;
-        const document = await documentsModel.findOne({ uploaded_for: docId});
-        let result;
+        const { docId } = req.params;
+        const { status, reason } = req.body;
+        const document = await documentsModel.findOne({ _id: docId});
         if(document){
             const user = await UserModel.findOne({ _id:document.uploaded_by });
             const receiver_ids = [user._id]; 
-            if(isAccepted){
-                result=await documentsModel.findByIdAndUpdate({_id: document._id},{is_verified: true}, {new: true});
+            const result=await documentsModel.findByIdAndUpdate({_id: document._id},{is_verified: status}, {new: true});
+            if(status === 'verified'){
+                
                 await notificationSender({
                     title: "Document Verified Successfully",
                     description: `Hoorah! Your Documents are verified by our team sucessfully get your bags packed!!`,
-                    sender_id: memberId,
                     receiver_id:  receiver_ids,
                 });
             }
-            else{
-                result = await documentsModel.findOneAndDelete({_id: document._id}); 
+            else if(status === 'rejected'){
+                //result = await documentsModel.findOneAndDelete({_id: document._id}); 
                 await notificationSender({
                     title: "Document Verification failed",
-                    description: `Sorry ${user.first_name} your document verification was not successful as ${reason}`,
-                    sender_id: memberId,
+                    description: `Sorry ${user.first_name} your document verification was not successful due the reason: ${reason}`,
                     receiver_id:  receiver_ids,
                 });
             }
@@ -38,7 +37,7 @@ export const verifyDocuments = async(req,res) => {
             responseGenerators(
                 { result },
                 StatusCodes.OK,
-                "DOCUMENT VERIFIED",
+                `DOCUMENT MARKED`,
                 0
             )
             );

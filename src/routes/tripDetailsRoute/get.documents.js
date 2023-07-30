@@ -8,7 +8,7 @@ import Joi from 'joi';
 
 export const getDocuments = async(req,res) => {
     try{
-        const { tripId, memberId } = req.params;
+        const { tripId } = req.params;
         const document = await documentsModel.findOne({ uploaded_for: tripId });
         if(document){
             
@@ -17,7 +17,6 @@ export const getDocuments = async(req,res) => {
             await notificationSender({
                 title: "Document Verfication",
                 description: `Your Documents are being verified by our team sit tight while we fetch you your trip!!`,
-                sender_id: memberId,
                 receiver_id:  receiver_ids,
             }) 
             return res

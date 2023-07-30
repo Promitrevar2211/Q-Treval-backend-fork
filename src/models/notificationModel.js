@@ -10,7 +10,7 @@ const notificationSchema = {
     link : {type: String},
     active: {type: Boolean, default: true},
     image_link: {type: String},
-    sender_id: {type : String, required : true},
+    sender_id: {type : String},
     read: {type: Boolean, default: false}
   };
   
