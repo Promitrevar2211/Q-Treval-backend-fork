@@ -4,6 +4,9 @@
   "description": "",
   "main": "index.js",
   "type": "module",
+  "engines":{
+    "node": ">=16.0.0"
+  },
   "scripts": {
     "lint": "npx eslint .",
     "start": "webpack --config webpack.config.js & node dist/index.js",
