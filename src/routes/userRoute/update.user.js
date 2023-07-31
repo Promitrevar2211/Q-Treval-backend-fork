@@ -63,8 +63,8 @@ export const updateUserHandler = async (req, res) => {
         )
       );
   } catch (error) {
-    logsErrorAndUrl(req, error, path.basename(__filename));
-    if (error instanceof Joi.Joi.ValidationError || error instanceof CustomError) {
+    //logsErrorAndUrl(req, error, path.basename(__filename));
+    if (error instanceof Joi.ValidationError || error instanceof CustomError) {
       return res
         .status(StatusCodes.BAD_REQUEST)
         .send(
