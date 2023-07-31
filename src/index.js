@@ -89,6 +89,9 @@ app.use("/api/history", historyRoute);
 app.use("/api/user-trip-details", tripDetailsRoute);
 app.use("/api/notifications",notificationRoute);
 app.get("/api/home-page", homePageHandler);
+app.get("/",(req,res)=>{
+  res.send("<h1>Welcome to Quantum Travel API</h1>")
+})
 //app.get("/api/city-search",searchCityHandler);
 app.use((req, res, next) => {
   try {
