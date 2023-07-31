@@ -1,10 +1,10 @@
 import { StatusCodes } from "http-status-codes";
-import { CustomError } from "../../helpers/custome.error";
-import { logsErrorAndUrl, responseGenerators } from "../../lib/utils";
-import { ValidationError } from "joi";
+import { CustomError } from "../../helpers/custome.error.js";
+import { logsErrorAndUrl, responseGenerators } from "../../lib/utils.js";
+import Joi from "joi";
 import path from "path";
-import { setPagination } from "../../commons/common-functions";
-import HistoryModel from "../../models/historyModel";
+import { setPagination } from "../../commons/common-functions.js";
+import HistoryModel from "../../models/historyModel.js";
 
 export const getSingleHistoryHandler = async (req, res) => {
   try {
@@ -29,7 +29,7 @@ export const getSingleHistoryHandler = async (req, res) => {
       );
   } catch (error) {
     logsErrorAndUrl(req, error, path.basename(__filename));
-    if (error instanceof ValidationError || error instanceof CustomError) {
+    if (error instanceof Joi.ValidationError || error instanceof CustomError) {
       return res
         .status(StatusCodes.BAD_REQUEST)
         .send(
@@ -121,7 +121,7 @@ export const getListHistoryHandler = async (req, res) => {
       );
   } catch (error) {
     logsErrorAndUrl(req, error, path.basename(__filename));
-    if (error instanceof ValidationError || error instanceof CustomError) {
+    if (error instanceof Joi.ValidationError || error instanceof CustomError) {
       return res
         .status(StatusCodes.BAD_REQUEST)
         .send(

@@ -1,22 +1,26 @@
 import { StatusCodes } from "http-status-codes";
-import { CustomError } from "../../helpers/custome.error";
-import { logsErrorAndUrl, responseGenerators } from "../../lib/utils";
-import { ValidationError } from "joi";
+import { CustomError } from "../../helpers/custome.error.js";
+import { logsErrorAndUrl, responseGenerators } from "../../lib/utils.js";
+import Joi from "joi";
 import fs from "fs";
 import path from "path";
 import moment from "moment";
-import { createTripDetailsValidation } from "../../helpers/validations/tripDetails.validation";
-import tripDetailsModel from "../../models/userTripDetailsModel";
+import { createTripDetailsValidation } from "../../helpers/validations/tripDetails.validation.js";
+import tripDetailsModel from "../../models/userTripDetailsModel.js";
 import nodemailer from "nodemailer";
 import { verify } from "jsonwebtoken";
-import config from "../../../config";
-import { PhoneNumberFormat, PhoneNumberUtil } from "google-libphonenumber";
-import emailResponseModel from "../../models/emailResponseModel";
-import { transporter } from "../../helpers/mailTransporter";
+import config from "../../../config/index.js";
+import googleLibPhoneNumber from "google-libphonenumber";
+import emailResponseModel from "../../models/emailResponseModel.js";
+import { transporter } from "../../helpers/mailTransporter.js";
 import { google } from "googleapis";
 import { GoogleAuth } from "google-auth-library";
-
-const googleKeyPath = path.join(__dirname, "../google_key.json");
+const { PhoneNumberFormat, PhoneNumberUtil } = googleLibPhoneNumber;
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+console.log(__dirname);
+const googleKeyPath = path.join(__dirname, "../../../google_key.json");
 const googleKeyRawData = fs.readFileSync(googleKeyPath);
 const googleKey = JSON.parse(googleKeyRawData);
 
@@ -287,7 +291,7 @@ export const createTripDetailsHandler = async (req, res) => {
       );
   } catch (error) {
     logsErrorAndUrl(req, error, path.basename(__filename));
-    if (error instanceof ValidationError || error instanceof CustomError) {
+    if (error instanceof Joi.ValidationError || error instanceof CustomError) {
       return res
         .status(StatusCodes.BAD_REQUEST)
         .send(

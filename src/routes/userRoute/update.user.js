@@ -1,11 +1,11 @@
 import { StatusCodes } from "http-status-codes";
-import { CustomError } from "../../helpers/custome.error";
-import { logsErrorAndUrl, responseGenerators } from "../../lib/utils";
-import { ValidationError } from "joi";
+import { CustomError } from "../../helpers/custome.error.js";
+import { logsErrorAndUrl, responseGenerators } from "../../lib/utils.js";
+import Joi from "joi";
 import path from "path";
-import { USER_MESSAGE } from "../../commons/global-constants";
-import UserModel from "../../models/userModel";
-import { updateUserValidation } from "../../helpers/validations/user.validation";
+import { USER_MESSAGE } from "../../commons/global-constants.js";
+import UserModel from "../../models/userModel.js";
+import { updateUserValidation } from "../../helpers/validations/user.validation.js";
 import moment from "moment";
 export const updateUserHandler = async (req, res) => {
   try {
@@ -64,7 +64,7 @@ export const updateUserHandler = async (req, res) => {
       );
   } catch (error) {
     logsErrorAndUrl(req, error, path.basename(__filename));
-    if (error instanceof ValidationError || error instanceof CustomError) {
+    if (error instanceof Joi.Joi.ValidationError || error instanceof CustomError) {
       return res
         .status(StatusCodes.BAD_REQUEST)
         .send(

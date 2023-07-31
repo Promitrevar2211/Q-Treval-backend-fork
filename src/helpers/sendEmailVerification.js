@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer";
 import otpGenerator from "otp-generator";
-import { CustomError } from "./custome.error";
-import { transporter } from "./mailTransporter";
+import { CustomError } from "./custome.error.js";
+import { transporter } from "./mailTransporter.js";
 
 let otpData = {};
 // Function to send the verification email

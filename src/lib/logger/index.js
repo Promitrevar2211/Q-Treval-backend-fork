@@ -1,8 +1,8 @@
 import * as winston from 'winston';
-import config from '../../../config'
+import config from '../../../config/index.js'
 import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone'
+import utc from 'dayjs/plugin/utc.js';
+import timezone from 'dayjs/plugin/timezone.js'
 dayjs.extend(utc)
 dayjs.extend(timezone);
 // eslint-disable-next-line no-undef

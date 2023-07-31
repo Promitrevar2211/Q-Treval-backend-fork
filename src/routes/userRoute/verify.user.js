@@ -1,9 +1,9 @@
-import { verifyOTP } from "../../helpers/sendEmailVerification";
-import UserModel from "../../models/userModel";
+import { verifyOTP } from "../../helpers/sendEmailVerification.js";
+import UserModel from "../../models/userModel.js";
 import { StatusCodes } from "http-status-codes";
-import { CustomError } from "../../helpers/custome.error";
-import { logsErrorAndUrl, responseGenerators } from "../../lib/utils";
-import { ValidationError } from "joi";
+import { CustomError } from "../../helpers/custome.error.js";
+import { logsErrorAndUrl, responseGenerators } from "../../lib/utils.js";
+import Joi from "joi";
 import path from "path";
 
 export const verifyUserHandler = async (req, res) => {
@@ -40,7 +40,7 @@ export const verifyUserHandler = async (req, res) => {
       );
   } catch (error) {
     logsErrorAndUrl(req, error, path.basename(__filename));
-    if (error instanceof ValidationError || error instanceof CustomError) {
+    if (error instanceof Joi.ValidationError || error instanceof CustomError) {
       return res
         .status(StatusCodes.BAD_REQUEST)
         .send(

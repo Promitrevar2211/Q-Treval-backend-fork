@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { getListHistoryHandler, getSingleHistoryHandler } from "./get.history";
-import { authenticateUser } from "../../middleware/authorization";
-import { authenticateAdmin } from "../../middleware/adminAuth";
+import { getListHistoryHandler, getSingleHistoryHandler } from "./get.history.js";
+import { authenticateUser } from "../../middleware/authorization.js";
+import { authenticateAdmin } from "../../middleware/adminAuth.js";
 
 const historyRoute = Router();
 

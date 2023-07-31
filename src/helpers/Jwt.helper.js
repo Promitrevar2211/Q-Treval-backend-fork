@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
-import { sign, verify } from "jsonwebtoken";
-import config from '../../config'
+import jsonwebtoken from "jsonwebtoken";
+import config from '../../config/index.js'
 
 dotenv.config();
 
@@ -16,12 +16,12 @@ const refreshJwtOption = {
 
 export function getJwt(data) {
   // eslint-disable-next-line no-undef
-  return sign(data, config.JWT_SECRET_KEY, jwtOption);
+  return jsonwebtoken.jsonwebtoken.sign (data, config.JWT_SECRET_KEY, jwtOption);
 }
 
 export function getShortJwt(data) {
   // eslint-disable-next-line no-undef
-  return sign(data, 'asaefasacsae', {
+  return jsonwebtoken.jsonwebtoken.sign (data, 'asaefasacsae', {
     expiresIn: '1h'
   });
 }
@@ -29,17 +29,17 @@ export function getShortJwt(data) {
 
 export async function verifyShortJwt(authorization) {
   // eslint-disable-next-line no-undef
-  const token = await verify(authorization, 'asaefasacsae');
+  const token = await jsonwebtoken.verify(authorization, 'asaefasacsae');
   return token;
 }
 
 export function getRefreshJwt(data) {
   // eslint-disable-next-line no-undef
-  return sign(data, config.JWT_SECRET_KEY, refreshJwtOption);
+  return jsonwebtoken.jsonwebtoken.sign (data, config.JWT_SECRET_KEY, refreshJwtOption);
 }
 
 export async function verifyJwt(authorization) {
   // eslint-disable-next-line no-undef
-  const token = await verify(authorization, config.JWT_SECRET_KEY);
+  const token = await jsonwebtoken.verify(authorization, config.JWT_SECRET_KEY);
   return token;
 }

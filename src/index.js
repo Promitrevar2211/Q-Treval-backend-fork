@@ -1,26 +1,52 @@
 import express from "express";
+import { Server } from 'socket.io';
+import http from 'http';
 import * as bodyParser from "body-parser";
-import http from "http";
 import { rateLimit } from "express-rate-limit";
 import { StatusCodes } from "http-status-codes";
-import { responseValidation } from "./lib/utils";
-import logger from "./lib/logger";
+import { responseValidation } from "./lib/utils.js";
+import logger from "./lib/logger/index.js";
 import helmet from "helmet";
 import cors from "cors";
-import config from "../config";
-import { createTripHandler } from "./routes/tripRoute/create.plan";
+import config from "../config/index.js";
+import { createTripHandler } from "./routes/tripRoute/create.plan.js";
 import { create } from "domain";
-import userRoute from "./routes/userRoute";
-import { authenticateUser } from "./middleware/authorization";
-import memberRoute from "./routes/teamRoute";
-import { getPlaceDetailsHandler } from "./routes/tripRoute/get.placedetails";
-import placeRoute from "./routes/destinationRoute";
-import historyRoute from "./routes/historyRoute";
-import tripDetailsRoute from "./routes/tripDetailsRoute";
-import { homePageHandler } from "./routes/homePageRoute/homePage";
-import { searchCityHandler } from "./routes/searchCityRoute/searchCity";
+import userRoute from "./routes/userRoute/index.js";
+import { authenticateUser } from "./middleware/authorization.js";
+import memberRoute from "./routes/teamRoute/index.js";
+import { getPlaceDetailsHandler } from "./routes/tripRoute/get.placedetails.js";
+import placeRoute from "./routes/destinationRoute/index.js";
+import historyRoute from "./routes/historyRoute/index.js";
+import notificationRoute from "./routes/notifications/index.js";
+import tripDetailsRoute from "./routes/tripDetailsRoute/index.js";
+import { homePageHandler } from "./routes/homePageRoute/homePage.js";
+import { searchCityHandler } from "./routes/searchCityRoute/searchCity.js";
+import fileUpload from  'express-fileupload';
 const app = express();
 const server = new http.Server(app);
+
+//Chat server
+const chatServer = http.createServer(app);
+const io = new Server(chatServer);
+
+io.on('connection', (socket) => {
+  console.log('new user connected');
+  let name;
+  socket.on('joining msg', (username) => {
+  	name = username;
+  	io.emit('chat message', `---${name} joined the chat---`);
+  });
+  
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+    io.emit('chat message', `---${name} left the chat---`);
+    
+  });
+  socket.on('chat message', (msg) => {
+    socket.broadcast.emit('chat message', msg);         //sending message to all except the sender
+  });
+});
+
 
 // eslint-disable-next-line no-undef
 if (process.env.NODE_ENV !== "development") {
@@ -29,9 +55,9 @@ if (process.env.NODE_ENV !== "development") {
 } else {
   app.use(cors({ origin: "*" }));
 }
-
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+//app.use(fileUpload());
+app.use(express.urlencoded());
+app.use(express.json());
 
 const limiter = rateLimit({
   windowMs: 5 * 60 * 1000, // 5 minutes
@@ -61,6 +87,7 @@ app.use("/api/member", memberRoute);
 app.use("/api/place", placeRoute);
 app.use("/api/history", historyRoute);
 app.use("/api/user-trip-details", tripDetailsRoute);
+app.use("/api/notifications",notificationRoute);
 app.get("/api/home-page", homePageHandler);
 //app.get("/api/city-search",searchCityHandler);
 app.use((req, res, next) => {

@@ -1,14 +1,14 @@
 import { Router } from "express";
-import { createMemberHandler } from "./create.member";
-import { getListMemberHandler, getSingleMemberHandler } from "./get.member";
-import { updateMemberHandler } from "./update.member";
-import { deleteMemberHandler } from "./delete.member";
-import { authenticateUser, authenticateOnlyMember } from "../../middleware/authorization";
-import { authenticateAdmin } from "../../middleware/adminAuth";
-import { memberLoginHandler } from "./login.member";
-import { verifyMemberHandler } from "./verify.member";
-import { otpHandler } from "./send.otp";
-import { approveMemberHandler } from "./approve.member";
+import { createMemberHandler } from "./create.member.js";
+import { getListMemberHandler, getSingleMemberHandler } from "./get.member.js";
+import { updateMemberHandler } from "./update.member.js";
+import { deleteMemberHandler } from "./delete.member.js";
+import { authenticateUser, authenticateOnlyMember } from "../../middleware/authorization.js";
+import { authenticateAdmin } from "../../middleware/adminAuth.js";
+import { memberLoginHandler } from "./login.member.js";
+import { verifyMemberHandler } from "./verify.member.js";
+import { otpHandler } from "./send.otp.js";
+import { approveMemberHandler } from "./approve.member.js";
 
 const memberRoute = Router();
 

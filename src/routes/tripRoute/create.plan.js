@@ -1,16 +1,16 @@
 import { StatusCodes } from "http-status-codes";
-import { CustomError } from "../../helpers/custome.error";
-import { logsErrorAndUrl, responseGenerators } from "../../lib/utils";
-import { ValidationError } from "joi";
+import { CustomError } from "../../helpers/custome.error.js";
+import { logsErrorAndUrl, responseGenerators } from "../../lib/utils.js";
+import Joi from "joi";
 import path from "path";
 import xml2js from "xml2js";
-import { getCurrentUnix } from "../../commons/common-functions";
+import { getCurrentUnix } from "../../commons/common-functions.js";
 import axios from "axios";
 import { response } from "express";
-import Place from "../../models/destinationModel";
-import { createHistory } from "../historyRoute/create.history";
+import Place from "../../models/destinationModel.js";
+import { createHistory } from "../historyRoute/create.history.js";
 import { verify } from "jsonwebtoken";
-import config from "../../../config";
+import config from "../../../config/index.js";
 function escapeXmlContent(unsafe) {
   return unsafe.replace(/[&'"]/g, function (c) {
     switch (c) {
@@ -119,7 +119,7 @@ export const createTripHandler = async (req, res) => {
     }
   } catch (error) {
     logsErrorAndUrl(req, error, path.basename(__filename));
-    if (error instanceof ValidationError || error instanceof CustomError) {
+    if (error instanceof Joi.Joi.ValidationError || error instanceof CustomError) {
       return res
         .status(StatusCodes.BAD_REQUEST)
         .send(

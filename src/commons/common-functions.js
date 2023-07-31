@@ -1,6 +1,6 @@
 import { nanoid } from "nanoid";
 import dayjs from "dayjs";
-import config from "../../config"
+import config from "../../config/index.js"
 let time_zone = config.TIMEZONE;
 
 export const generatePublicId = () => {

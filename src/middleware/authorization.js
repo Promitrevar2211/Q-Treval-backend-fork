@@ -1,11 +1,11 @@
 import { StatusCodes } from "http-status-codes";
-import { ERROR } from "../commons/global-constants";
-import { verifyJwt } from "../helpers/Jwt.helper";
+import { ERROR } from "../commons/global-constants.js";
+import { verifyJwt } from "../helpers/Jwt.helper.js";
 import { verify } from "jsonwebtoken";
-import { logsErrorAndUrl, responseGenerators } from "../lib/utils";
-import UserModel from "../models/userModel";
-import config from "../../config";
-import MemberModel from "../models/memberModel";
+import { logsErrorAndUrl, responseGenerators } from "../lib/utils.js";
+import UserModel from "../models/userModel.js";
+import config from "../../config/index.js";
+import MemberModel from "../models/memberModel.js";
 
 export const authenticateUser = async (req, res, next) => {
   try {

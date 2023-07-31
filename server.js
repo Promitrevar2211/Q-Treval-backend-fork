@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
-import server from "./src";
-import { logsError } from "./src/lib/utils";
-import { mongooseConnection } from "./src/mongodb";
+import server from "./src/index.js";
+import { logsError } from "./src/lib/utils.js";
+import { mongooseConnection } from "./src/mongodb/index.js";
 
 let db;
 // eslint-disable-next-line no-undef

@@ -1,10 +1,10 @@
-import Place from "../../models/destinationModel";
+import Place from "../../models/destinationModel.js";
 import { StatusCodes } from "http-status-codes";
-import { CustomError } from "../../helpers/custome.error";
-import { logsErrorAndUrl, responseGenerators } from "../../lib/utils";
-import { ValidationError } from "joi";
+import { CustomError } from "../../helpers/custome.error.js";
+import { logsErrorAndUrl, responseGenerators } from "../../lib/utils.js";
+import Joi from "joi";
 import path from "path";
-import WeatherEngine from "../../helpers/getWeatherDetails";
+import WeatherEngine from "../../helpers/getWeatherDetails.js";
 export const homePageHandler = async (req, res) => {
   try {
     let locations = await Place.find(
@@ -20,7 +20,7 @@ export const homePageHandler = async (req, res) => {
       );
   } catch (error) {
     logsErrorAndUrl(req, error, path.basename(__filename));
-    if (error instanceof ValidationError || error instanceof CustomError) {
+    if (error instanceof Joi.ValidationError || error instanceof CustomError) {
       return res
         .status(StatusCodes.BAD_REQUEST)
         .send(

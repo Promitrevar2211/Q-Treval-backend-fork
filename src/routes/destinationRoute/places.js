@@ -1,17 +1,17 @@
 import { validationResult } from "express-validator";
-import Place from "../../models/destinationModel";
-import { CustomError } from "../../helpers/custome.error";
+import Place from "../../models/destinationModel.js";
+import { CustomError } from "../../helpers/custome.error.js";
 import { StatusCodes } from "http-status-codes";
-import { setPagination } from "../../commons/common-functions";
-import { createPlaceValidation } from "../../helpers/validations/place.validation";
-import { logsErrorAndUrl, responseGenerators } from "../../lib/utils";
-import { ValidationError } from "joi";
+import { setPagination } from "../../commons/common-functions.js";
+import { createPlaceValidation } from "../../helpers/validations/place.validation.js";
+import { logsErrorAndUrl, responseGenerators } from "../../lib/utils.js";
+import Joi from "joi";
 import path from "path";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import config from "../../../config";
+import config from "../../../config/index.js";
 import http from "https";
-import { json } from "body-parser";
+import bodyParser from "body-parser";
 
 // Middleware to handle validation errors
 const handleValidationErrors = (req, res, next) => {
@@ -41,7 +41,7 @@ export const addPlace = async (req, res) => {
     );
   } catch (error) {
     logsErrorAndUrl(req, error, path.basename(__filename));
-    if (error instanceof ValidationError || error instanceof CustomError) {
+    if (error instanceof Joi.ValidationError || error instanceof CustomError) {
       return res
         .status(StatusCodes.BAD_REQUEST)
         .send(
@@ -49,7 +49,7 @@ export const addPlace = async (req, res) => {
         );
     }
     // if (
-    //   error instanceof mongoose.Error.ValidationError &&
+    //   error instanceof mongoose.Error.Joi.ValidationError &&
     //   error.errors.fieldName
     // ) {
     //   // Custom error message for unique constraint violation
@@ -103,7 +103,7 @@ export const getSinglePlace = async (req, res) => {
     );
   } catch (error) {
     logsErrorAndUrl(req, error, path.basename(__filename));
-    if (error instanceof ValidationError || error instanceof CustomError) {
+    if (error instanceof Joi.ValidationError || error instanceof CustomError) {
       return res
         .status(StatusCodes.BAD_REQUEST)
         .send(
@@ -111,7 +111,7 @@ export const getSinglePlace = async (req, res) => {
         );
     }
     // if (
-    //   error instanceof mongoose.Error.ValidationError &&
+    //   error instanceof mongoose.Error.Joi.ValidationError &&
     //   error.errors.fieldName
     // ) {
     //   // Custom error message for unique constraint violation

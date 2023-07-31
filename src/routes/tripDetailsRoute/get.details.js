@@ -1,10 +1,10 @@
 import { StatusCodes } from "http-status-codes";
-import { CustomError } from "../../helpers/custome.error";
-import { logsErrorAndUrl, responseGenerators } from "../../lib/utils";
-import { ValidationError } from "joi";
+import { CustomError } from "../../helpers/custome.error.js";
+import { logsErrorAndUrl, responseGenerators } from "../../lib/utils.js";
+import Joi from "joi";
 import path from "path";
-import { setPagination } from "../../commons/common-functions";
-import tripDetailsModel from "../../models/userTripDetailsModel";
+import { setPagination } from "../../commons/common-functions.js";
+import tripDetailsModel from "../../models/userTripDetailsModel.js";
 
 export const getSingleTripDetailsHandler = async (req, res) => {
   try {
@@ -30,7 +30,7 @@ export const getSingleTripDetailsHandler = async (req, res) => {
       );
   } catch (error) {
     logsErrorAndUrl(req, error, path.basename(__filename));
-    if (error instanceof ValidationError || error instanceof CustomError) {
+    if (error instanceof Joi.ValidationError || error instanceof CustomError) {
       return res
         .status(StatusCodes.BAD_REQUEST)
         .send(
@@ -53,17 +53,31 @@ export const getSingleTripDetailsHandler = async (req, res) => {
 export const getListTripDetailsHandler = async (req, res) => {
   try {
     const pagination = setPagination(req.query);
-
     let where = {
       isDeleted: false,
     };
-
-    let paginated_data = await tripDetailsModel
-      .find({ ...where })
+    //console.log(req.query.search);
+    const paginated_data_req=(req.query.search)?  tripDetailsModel
+    .find({"$and":
+                [{"$or":[
+                  {'destination':{"$regex": req.query.search, "$options":'i'}} 
+                  ,{'email':{"$regex": req.query.search, "$options":"i"}},
+                  {'name':{"$regex": req.query.search, "$options":"i"}},
+                ]},
+                {...where}, 
+          ]})
+    :  tripDetailsModel
+      .find({ ...where });
+      if(req.query.time){
+        paginated_data_req.sort({going_travel_date:1});
+      }
+      else if(req.query.location){
+        paginated_data_req.sort({destination: 1});
+      }
+      const paginated_data = await paginated_data_req
       .sort({ ...pagination.sort })
       .skip(pagination.offset)
       .limit(pagination.limit);
-
     let total_count = await tripDetailsModel.count({ ...where });
     return res
       .status(StatusCodes.OK)
@@ -77,7 +91,7 @@ export const getListTripDetailsHandler = async (req, res) => {
       );
   } catch (error) {
     logsErrorAndUrl(req, error, path.basename(__filename));
-    if (error instanceof ValidationError || error instanceof CustomError) {
+    if (error instanceof Joi.ValidationError || error instanceof CustomError) {
       return res
         .status(StatusCodes.BAD_REQUEST)
         .send(

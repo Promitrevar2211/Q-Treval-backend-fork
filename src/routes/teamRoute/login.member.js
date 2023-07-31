@@ -1,12 +1,12 @@
 import { StatusCodes } from "http-status-codes";
-import { CustomError } from "../../helpers/custome.error";
-import { logsErrorAndUrl, responseGenerators } from "../../lib/utils";
-import { ValidationError } from "joi";
+import { CustomError } from "../../helpers/custome.error.js";
+import { logsErrorAndUrl, responseGenerators } from "../../lib/utils.js";
+import Joi from "joi";
 import path from "path";
-import MemberModel from "../../models/memberModel";
-import { sign } from "jsonwebtoken";
-import config from "../../../config";
-import { loginMemberValidation } from "../../helpers/validations/member.validation";
+import MemberModel from "../../models/memberModel.js";
+import jsonwebtoken from "jsonwebtoken" ;
+import config from "../../../config/index.js";
+import { loginMemberValidation } from "../../helpers/validations/member.validation.js";
 export const memberLoginHandler = async (req, res) => {
   try {
     await loginMemberValidation.validateAsync({ ...req.body });
@@ -26,7 +26,7 @@ export const memberLoginHandler = async (req, res) => {
       throw new CustomError(`Please wait for approval from admin`);
     }
 
-    let newjwt = sign({ _id: memberData._id }, config.JWT_SECRET_KEY);
+    let newjwt = jsonwebtoken.sign ({ _id: memberData._id }, config.JWT_SECRET_KEY);
 
     return res
       .status(StatusCodes.OK)
@@ -40,7 +40,7 @@ export const memberLoginHandler = async (req, res) => {
       );
   } catch (error) {
     logsErrorAndUrl(req, error, path.basename(__filename));
-    if (error instanceof ValidationError || error instanceof CustomError) {
+    if (error instanceof Joi.ValidationError || error instanceof CustomError) {
       return res
         .status(StatusCodes.BAD_REQUEST)
         .send(
