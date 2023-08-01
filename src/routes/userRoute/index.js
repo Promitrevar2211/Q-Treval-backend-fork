@@ -8,7 +8,7 @@ import { authenticateOnlyMember, authenticateUser } from "../../middleware/autho
 import { authenticateAdmin } from "../../middleware/adminAuth.js";
 import { userLoginHandler } from "./login.user.js";
 import { verifyUserHandler } from "./verify.user.js";
-import { otpHandler } from "./send.otp.js";
+import { otpHandler, changePasswordOtpHandler } from "./send.otp.js";
 import { getUserTrips } from "./get.user.trip.history.js";
 
 const userRoute = Router();
@@ -21,6 +21,7 @@ userRoute.delete('/delete-user/:userId?',authenticateUser,deleteUserHandler);
 userRoute.get('/verify-user',verifyUserHandler);
 userRoute.post('/change-password',updatePassword);
 userRoute.get('/send-otp',otpHandler);
+userRoute.get('/change-password/send-otp',changePasswordOtpHandler);
 userRoute.post('/login',userLoginHandler);
 userRoute.get('/trips/:userId',getUserTrips);
 export default userRoute;
