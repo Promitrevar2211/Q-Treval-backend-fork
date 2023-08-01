@@ -8,12 +8,12 @@ import path from "path";
 
 export const updatePassword = async (req, res) => {
     try {
-        let { email, OTP } = req.query;
+        let { email } = req.query;
     
         if (!email) throw new CustomError("Please Enter Email");
-        if (!OTP) throw new CustomError("Please Enter OTP");
-        let verified = verifyOTP(email, OTP);
-        if (!verified) throw new CustomError("Entered Email or OTP is incorrect");
+        // if (!OTP) throw new CustomError("Please Enter OTP");
+        // let verified = verifyOTP(email, OTP);
+        // if (!verified) throw new CustomError("Entered Email or OTP is incorrect");
     
         let updateUser = await UserModel.findOneAndUpdate(
           {
