@@ -38,7 +38,7 @@ export const deleteUserHandler = async (req, res) => {
         responseGenerators({}, StatusCodes.OK, USER_MESSAGE.USER_DELETED, 0)
       );
   } catch (error) {
-    logsErrorAndUrl(req, error, path.basename(__filename));
+    // logsErrorAndUrl(req, error, path.basename(__filename));
     if (error instanceof Joi.Joi.ValidationError || error instanceof CustomError) {
       return res
         .status(StatusCodes.BAD_REQUEST)

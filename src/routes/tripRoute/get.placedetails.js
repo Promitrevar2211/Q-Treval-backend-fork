@@ -33,7 +33,7 @@ export const getPlaceDetailsHandler = async (req, res) => {
 
     return res.status(StatusCodes.OK).send(responseData);
   } catch (error) {
-    logsErrorAndUrl(req, error, path.basename(__filename));
+    // logsErrorAndUrl(req, error, path.basename(__filename));
     if (error instanceof Joi.ValidationError || error instanceof CustomError) {
       return res
         .status(StatusCodes.BAD_REQUEST)

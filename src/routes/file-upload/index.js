@@ -141,7 +141,7 @@ export const documentUploadHandler = async (req, res) => {
     );
   } catch (error) {
     // set logs Error function
-    logsErrorAndUrl(req, error);
+    // logsErrorAndUrl(req, error);
     if (
       error instanceof CustomError ||
       error instanceof FileTypeIssue ||

@@ -28,7 +28,7 @@ export const getSingleHistoryHandler = async (req, res) => {
         )
       );
   } catch (error) {
-    logsErrorAndUrl(req, error, path.basename(__filename));
+    // logsErrorAndUrl(req, error, path.basename(__filename));
     if (error instanceof Joi.ValidationError || error instanceof CustomError) {
       return res
         .status(StatusCodes.BAD_REQUEST)
@@ -120,7 +120,7 @@ export const getListHistoryHandler = async (req, res) => {
         )
       );
   } catch (error) {
-    logsErrorAndUrl(req, error, path.basename(__filename));
+    // logsErrorAndUrl(req, error, path.basename(__filename));
     if (error instanceof Joi.ValidationError || error instanceof CustomError) {
       return res
         .status(StatusCodes.BAD_REQUEST)

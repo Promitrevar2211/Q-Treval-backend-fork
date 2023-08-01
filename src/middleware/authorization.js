@@ -59,7 +59,7 @@ export const authenticateUser = async (req, res, next) => {
     next();
   } catch (error) {
     // JWT verification failed, return unauthorized response
-    logsErrorAndUrl(req, error);
+    // logsErrorAndUrl(req, error);
     return res
       .status(StatusCodes.UNAUTHORIZED)
       .send(
@@ -86,7 +86,7 @@ export const authenticateOnlyMember = async (req, res, next) => {
     next();
   } catch (error) {
     // JWT verification failed, return unauthorized response
-    logsErrorAndUrl(req, error);
+    // logsErrorAndUrl(req, error);
     return res
       .status(StatusCodes.UNAUTHORIZED)
       .send(

@@ -2,14 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "dist/index.js",
+      "src": "src/index.js",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["dist/*", "config/*", "logs/*", "google_key.json"]
+        "includeFiles": ["src/*", "config/*", "logs/*", "google_key.json"]
       }
     }
   ],
-  "rewrites": [{ "source": "/(.*)", "destination": "dist/index.js" }],
+  "rewrites": [{ "source": "/(.*)", "destination": "src/index.js" }],
   "headers": [
     {
       "source": "/(.*)",
@@ -27,7 +27,7 @@
       ]
     },
     {
-      "source": "/api-mm360.nextlabai.com/(.*)",
+      "source": "api/(.*)",
       "headers": [
         { "key": "Access-Control-Allow-Credentials", "value": "true" },
         { "key": "Access-Control-Allow-Origin", "value": "*" },

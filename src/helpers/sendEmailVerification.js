@@ -15,7 +15,9 @@ function sendVerificationEmail(userEmail, verificationCode) {
 
   transporter.sendMail(mailOptions);
 }
-
+export async function sendForgotPasswordLink(userEmail){
+  
+}
 export async function sendOTP(userEmail) {
   try {
     const otp = otpGenerator.generate(6, {
