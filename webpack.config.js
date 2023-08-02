@@ -1,9 +1,11 @@
-const path = require('path');
-const webpackNodeExternals = require('webpack-node-externals');
-const Dotenv = require('dotenv-webpack');
+import path from 'path';
+import webpackNodeExternals from 'webpack-node-externals';
+import Dotenv from 'dotenv-webpack'
+import { fileURLToPath } from 'url';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-module.exports = {
+export default {
     entry: './server.js',
     target: 'node',
     mode: 'development',
