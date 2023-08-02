@@ -9,6 +9,7 @@ import { memberLoginHandler } from "./login.member.js";
 import { verifyMemberHandler } from "./verify.member.js";
 import { otpHandler } from "./send.otp.js";
 import { approveMemberHandler } from "./approve.member.js";
+import { createAdminChat } from "./create.chat.js";
 
 const memberRoute = Router();
 
@@ -19,6 +20,7 @@ memberRoute.put('/update-member/:memberId?',authenticateUser,authenticateOnlyMem
 memberRoute.get('/approve-member/:memberId',authenticateUser,authenticateAdmin,approveMemberHandler);
 memberRoute.delete('/delete-member/:memberId?',authenticateUser,authenticateOnlyMember,deleteMemberHandler);
 memberRoute.get('/verify-member',verifyMemberHandler);
+memberRoute.post('/chats/:tripId', createAdminChat);
 memberRoute.get('/send-otp',otpHandler);
 memberRoute.post('/login',memberLoginHandler);
 export default memberRoute;

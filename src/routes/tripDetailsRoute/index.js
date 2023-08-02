@@ -13,6 +13,7 @@ import {updateNotes} from "./update.notes.js";
 import { addDocuments } from  "./add.documents.js";
 import { getDocuments } from "./get.documents.js";
 import { verifyDocuments } from "./verify.documents.js";
+import { getChats } from "./get.chats.js";
 const tripDetailsRoute = Router();
 
 tripDetailsRoute.post("/create-detail",createTripDetailsHandler);
@@ -31,5 +32,8 @@ tripDetailsRoute.put("/notes/:id",updateNotes);
 tripDetailsRoute.post("/upload/:tripId/:userId",upload.single('file'),addDocuments);
 tripDetailsRoute.get("/user-docs/:tripId",getDocuments);
 tripDetailsRoute.post("/verify-docs/:docId",verifyDocuments);
+
+//chat Apis
+tripDetailsRoute.get("/chats/:tripId",getChats);
 
 export default tripDetailsRoute;

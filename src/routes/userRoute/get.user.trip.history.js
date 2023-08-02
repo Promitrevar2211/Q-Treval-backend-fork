@@ -11,11 +11,8 @@ import tripDetailsModel from "../../models/userTripDetailsModel.js";
 export const getUserTrips = async(req,res) => {
     try{
         const pagination = setPagination(req.query);
-        const {userId} =  req.params;
-        const {email} = await UserModel.findOne({
-            _id: userId,
-            isDeleted: false,
-          });
+        const {email} =  req.params;
+        
         const result = await tripDetailsModel.find({
                 email: email,
                 isDeleted: false

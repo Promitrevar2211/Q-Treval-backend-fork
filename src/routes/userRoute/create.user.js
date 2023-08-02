@@ -31,10 +31,9 @@ export const createUserHandler = async (req, res) => {
 
     // Split the date string into day, month, and year components
     const [day, month, year] = dobString.split("/");
-
     // Create a new Date object with the year, month (subtracting 1 as months are zero-based), and day
     const formatdob = new Date(Date.UTC(year, month - 1, day));
-
+    console.log(formatdob)
     let newUser = await UserModel.create({
       first_name,
       last_name,
@@ -44,12 +43,11 @@ export const createUserHandler = async (req, res) => {
       password,
       created_at: new Date(),
     });
-
     return res
       .status(StatusCodes.OK)
       .send(
         responseGenerators(
-          {},
+          { },
           StatusCodes.OK,
           "OTP has been sent to your email successfully",
           0
@@ -57,7 +55,8 @@ export const createUserHandler = async (req, res) => {
       );
   } catch (error) {
     // logsErrorAndUrl(req, error, path.basename(__filename));
-    if (error instanceof Joi.Joi.ValidationError || error instanceof CustomError) {
+    console.log(error.message)
+    if (error instanceof Joi.ValidationError || error instanceof CustomError) {
       return res
         .status(StatusCodes.BAD_REQUEST)
         .send(
