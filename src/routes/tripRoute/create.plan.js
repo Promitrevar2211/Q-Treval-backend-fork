@@ -9,7 +9,7 @@ import axios from "axios";
 import { response } from "express";
 import Place from "../../models/destinationModel.js";
 import { createHistory } from "../historyRoute/create.history.js";
-import { verify } from "jsonwebtoken";
+import jsonwebtoken from "jsonwebtoken";
 import config from "../../../config/index.js";
 function escapeXmlContent(unsafe) {
   return unsafe.replace(/[&'"]/g, function (c) {
@@ -30,7 +30,7 @@ export const createTripHandler = async (req, res) => {
     let tokenData;
     try {
       if (authorization) {
-        tokenData = verify(authorization, config.JWT_SECRET_KEY);
+        tokenData = jsonwebtoken.verify(authorization, config.JWT_SECRET_KEY);
       }
     } catch (error) {
       throw new CustomError("Please provide a valid token");

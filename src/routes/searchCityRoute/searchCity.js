@@ -9,7 +9,7 @@ import axios from "axios";
 import { response } from "express";
 import Place from "../../models/destinationModel.js";
 import { createHistory } from "../historyRoute/create.history.js";
-import { verify } from "jsonwebtoken";
+import jsonwebtoken from "jsonwebtoken";
 import config from "../../../config/index.js";
 
 export const searchCityHandler = async (req, res) => {

@@ -8,7 +8,7 @@ import moment from "moment";
 import { createTripDetailsValidation } from "../../helpers/validations/tripDetails.validation.js";
 import tripDetailsModel from "../../models/userTripDetailsModel.js";
 import nodemailer from "nodemailer";
-import { verify } from "jsonwebtoken";
+import jsonwebtoken from "jsonwebtoken";
 import config from "../../../config/index.js";
 import googleLibPhoneNumber from "google-libphonenumber";
 import emailResponseModel from "../../models/emailResponseModel.js";
@@ -171,7 +171,7 @@ export const createTripDetailsHandler = async (req, res) => {
     let tokenData;
     try {
       if (authorization) {
-        tokenData = verify(authorization, config.JWT_SECRET_KEY);
+        tokenData = jsonwebtoken.verify(authorization, config.JWT_SECRET_KEY);
       }
     } catch (error) {
       throw new CustomError("Please provide a valid token");

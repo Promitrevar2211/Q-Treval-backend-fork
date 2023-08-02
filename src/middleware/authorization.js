@@ -1,7 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import { ERROR } from "../commons/global-constants.js";
 import { verifyJwt } from "../helpers/Jwt.helper.js";
-import { verify } from "jsonwebtoken";
+import jsonwebtoken from "jsonwebtoken";
 import { logsErrorAndUrl, responseGenerators } from "../lib/utils.js";
 import UserModel from "../models/userModel.js";
 import config from "../../config/index.js";
@@ -23,7 +23,7 @@ export const authenticateUser = async (req, res, next) => {
         );
     }
     // Verify JWT token
-    const tokenData = verify(authorization, config.JWT_SECRET_KEY);
+    const tokenData = jsonwebtoken.verify(authorization, config.JWT_SECRET_KEY);
     req.tokenData = tokenData;
 
     let member = await MemberModel.findOne({
