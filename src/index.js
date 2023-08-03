@@ -97,7 +97,7 @@ app.use("/api/notifications",notificationRoute);
 app.get("/api/home-page", homePageHandler);
 app.get("/",(req,res)=>{
   console.log(process.env.NODE_ENV);
-  res.send({env:process.env.NODE_ENV});
+  res.send({env:process.env.NODE_ENV, frontend: config.FRONT_END_URL});
 })
 console.log(process.env.NODE_ENV);
 //app.get("/api/city-search",searchCityHandler);
