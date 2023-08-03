@@ -1,5 +1,6 @@
 import express from "express";
 import { Server } from 'socket.io';
+import dotenv from 'dotenv';
 import http from 'http';
 import * as bodyParser from "body-parser";
 import { rateLimit } from "express-rate-limit";
@@ -22,6 +23,7 @@ import tripDetailsRoute from "./routes/tripDetailsRoute/index.js";
 import { homePageHandler } from "./routes/homePageRoute/homePage.js";
 import { searchCityHandler } from "./routes/searchCityRoute/searchCity.js";
 import fileUpload from  'express-fileupload';
+dotenv.config();
 const app = express();
 const server = new http.Server(app);
 
@@ -49,12 +51,16 @@ io.on('connection', (socket) => {
 
 
 // eslint-disable-next-line no-undef
-if (process.env.NODE_ENV !== "development") {
+if (process.env.NODE_ENV == "production") {
   // eslint-disable-next-line no-undef
   app.use(cors({ origin: [config.FRONT_END_URL] }));
-} else {
+} else if(process.env.NODE_ENV == 'stagging'){
+  app.use(cors({ origin: [config.FRONT_END_URL]}));
+}
+else{
   app.use(cors({ origin: "*" }));
 }
+
 //app.use(fileUpload());
 app.use(express.urlencoded());
 app.use(express.json());
@@ -90,8 +96,9 @@ app.use("/api/user-trip-details", tripDetailsRoute);
 app.use("/api/notifications",notificationRoute);
 app.get("/api/home-page", homePageHandler);
 app.get("/",(req,res)=>{
-  res.send("<h1>Welcome to Quantum Travel API</h1>")
+  console.log(process.env.NODE_ENV);
 })
+console.log(process.env.NODE_ENV);
 //app.get("/api/city-search",searchCityHandler);
 app.use((req, res, next) => {
   try {

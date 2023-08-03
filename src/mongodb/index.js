@@ -9,6 +9,9 @@ const configs = {
     // eslint-disable-next-line no-undef
     connection: config.DATABASE_CONNECTION_URI_DEV,
   },
+  production: {
+    connection: config.DATABASE_CONNECTION_URI_DEV
+  },
 
   test: {
     // eslint-disable-next-line no-undef
