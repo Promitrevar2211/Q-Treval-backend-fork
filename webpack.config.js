@@ -8,7 +8,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export default {
     entry: './server.js',
     target: 'node',
-    mode: 'development',
+    mode: 'production',
     externals: [webpackNodeExternals()],
     output: {
         filename: 'index.js',
