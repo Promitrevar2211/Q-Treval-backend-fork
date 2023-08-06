@@ -29,7 +29,7 @@
   "FAST2SMS_API_KEY": "0CilgRBPSw1y3EdJFcb2mA6xnXTrjaqGkLVYupzeUtDIO9hN749qKCOdISur40peRJti1yQl8YWNcZjE",
   "FAST2SMS_API_ROUTE": "t",
   "FAST2SMS_API_SENDER_ID": "Cghpet",
-  "FRONT_END_URL": "https://quatumtravel.ai/",
+  "FRONT_END_URL": "https://q-treval-frontend-tau.vercel.app/",
   "EXPIRED_IN": "1d",
   "REFRESH_EXPIRED_IN": "1y",
   "STRIPE_PUBLISHABLE_KEY": "pk_12345",
