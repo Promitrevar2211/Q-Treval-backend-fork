@@ -23,7 +23,7 @@
   "EMAIL_USER": "booking@qxlabai.com",
   "EMAIL_PASS": "hmsxxmcihkxjiarp",
   "EMAIL_FROM": "booking@qxlabai.com",
-  "FRONT_END_URL": "https://quatumtravel.ai/",
+  "FRONT_END_URL": "https://q-treval-frontend-tau.vercel.app/",
   "EXPIRED_IN": "1d",
   "REFRESH_EXPIRED_IN": "1y",
   "BASIC": "price_12345",
