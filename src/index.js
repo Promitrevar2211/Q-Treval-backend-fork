@@ -1,7 +1,7 @@
 import express from "express";
-import { Server } from 'socket.io';
-import dotenv from 'dotenv';
-import http from 'http';
+import { Server } from "socket.io";
+import dotenv from "dotenv";
+import http from "http";
 import * as bodyParser from "body-parser";
 import { rateLimit } from "express-rate-limit";
 import { StatusCodes } from "http-status-codes";
@@ -22,7 +22,7 @@ import notificationRoute from "./routes/notifications/index.js";
 import tripDetailsRoute from "./routes/tripDetailsRoute/index.js";
 import { homePageHandler } from "./routes/homePageRoute/homePage.js";
 import { searchCityHandler } from "./routes/searchCityRoute/searchCity.js";
-import fileUpload from  'express-fileupload';
+import fileUpload from "express-fileupload";
 dotenv.config();
 const app = express();
 const server = new http.Server(app);
@@ -31,35 +31,34 @@ const server = new http.Server(app);
 const chatServer = http.createServer(app);
 const io = new Server(chatServer);
 
-io.on('connection', (socket) => {
-  console.log('new user connected');
+io.on("connection", (socket) => {
+  console.log("new user connected");
   let name;
-  socket.on('joining msg', (username) => {
-  	name = username;
-  	io.emit('chat message', `---${name} joined the chat---`);
+  socket.on("joining msg", (username) => {
+    name = username;
+    io.emit("chat message", `---${name} joined the chat---`);
   });
-  
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
-    io.emit('chat message', `---${name} left the chat---`);
-    
+
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+    io.emit("chat message", `---${name} left the chat---`);
   });
-  socket.on('chat message', (msg) => {
-    socket.broadcast.emit('chat message', msg);         //sending message to all except the sender
+  socket.on("chat message", (msg) => {
+    socket.broadcast.emit("chat message", msg); //sending message to all except the sender
   });
 });
 
-
 // eslint-disable-next-line no-undef
-if (process.env.NODE_ENV == "production") {
-  // eslint-disable-next-line no-undef
-  app.use(cors({ origin: [config.FRONT_END_URL] }));
-} else if(process.env.NODE_ENV == 'stagging'){
-  app.use(cors({ origin: [config.FRONT_END_URL]}));
-}
-else{
-  app.use(cors({ origin: "*" }));
-}
+// if (process.env.NODE_ENV == "production") {
+//   // eslint-disable-next-line no-undef
+//   app.use(cors({ origin: [config.FRONT_END_URL] }));
+// } else if(process.env.NODE_ENV == 'stagging'){
+//   app.use(cors({ origin: [config.FRONT_END_URL]}));
+// }
+// else{
+//   app.use(cors({ origin: "*" }));
+// }
+app.use(cors());
 
 //app.use(fileUpload());
 app.use(express.urlencoded());
@@ -93,12 +92,12 @@ app.use("/api/member", memberRoute);
 app.use("/api/place", placeRoute);
 app.use("/api/history", historyRoute);
 app.use("/api/user-trip-details", tripDetailsRoute);
-app.use("/api/notifications",notificationRoute);
+app.use("/api/notifications", notificationRoute);
 app.get("/api/home-page", homePageHandler);
-app.get("/",(req,res)=>{
+app.get("/", (req, res) => {
   console.log(process.env.NODE_ENV);
-  res.send({env:process.env.NODE_ENV, frontend: config.FRONT_END_URL});
-})
+  res.send({ env: process.env.NODE_ENV, frontend: config.FRONT_END_URL });
+});
 console.log(process.env.NODE_ENV);
 //app.get("/api/city-search",searchCityHandler);
 app.use((req, res, next) => {
