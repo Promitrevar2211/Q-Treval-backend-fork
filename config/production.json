@@ -14,7 +14,7 @@
     "sender_email_name": "Media360 <booking@qxlabai.com>"
   },
   "PRIVATE_API_KEY": "si51inptQaBvh6ZzGvI1iaOl8JtJYqWmGbnyVj994Nk=",
-  "DATABASE_CONNECTION_URI_DEV": "mongodb+srv://dsoul-travel:8gPNQvpnMj3HSPSt@dsoul-travel.f6dvugd.mongodb.net/dsoul-travel",
+  "DATABASE_CONNECTION_URI_DEV": "mongodb+srv://Promit:Promit123@cluster0.nfnlcqf.mongodb.net/q-travel",
   "AWS_ACCESS_KEY_ID": "AKIA5M5ZEZRLXBRWCJFG",
   "AWS_SECRET_ACCESS_KEY": "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",
   "S3_BUCKET_NAME": "din24-news",
@@ -29,7 +29,7 @@
   "FAST2SMS_API_KEY": "0CilgRBPSw1y3EdJFcb2mA6xnXTrjaqGkLVYupzeUtDIO9hN749qKCOdISur40peRJti1yQl8YWNcZjE",
   "FAST2SMS_API_ROUTE": "t",
   "FAST2SMS_API_SENDER_ID": "Cghpet",
-  "FRONT_END_URL": "https://q-treval-frontend-tau.vercel.app/",
+  "FRONT_END_URL": "https://q-treval-frontend-tau.vercel.app",
   "EXPIRED_IN": "1d",
   "REFRESH_EXPIRED_IN": "1y",
   "STRIPE_PUBLISHABLE_KEY": "pk_12345",

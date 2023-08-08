@@ -48,17 +48,28 @@ io.on("connection", (socket) => {
   });
 });
 
-// eslint-disable-next-line no-undef
-// if (process.env.NODE_ENV == "production") {
-//   // eslint-disable-next-line no-undef
-//   app.use(cors({ origin: [config.FRONT_END_URL] }));
-// } else if(process.env.NODE_ENV == 'stagging'){
-//   app.use(cors({ origin: [config.FRONT_END_URL]}));
-// }
-// else{
-//   app.use(cors({ origin: "*" }));
-// }
-app.use(cors());
+app.use(function (req, res, next) {
+
+
+  res.setHeader('Access-Control-Allow-Origin', config.FRONT_END_URL);
+
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  next();
+});
+
+if (process.env.NODE_ENV == "production") {
+  // eslint-disable-next-line no-undef
+  app.use(cors({ origin: [config.FRONT_END_URL] }));
+} else if(process.env.NODE_ENV == 'stagging'){
+  app.use(cors({ origin: [config.FRONT_END_URL]}));
+}
+else{
+  app.use(cors({ origin: "*" }));
+}
 
 //app.use(fileUpload());
 app.use(express.urlencoded());
