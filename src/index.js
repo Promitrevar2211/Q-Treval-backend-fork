@@ -51,7 +51,7 @@ io.on("connection", (socket) => {
 app.use(function (req, res, next) {
 
 
-  res.setHeader('Access-Control-Allow-Origin', config.FRONT_END_URL);
+  res.setHeader('Access-Control-Allow-Origin', '*');
 
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 
@@ -63,9 +63,9 @@ app.use(function (req, res, next) {
 
 if (process.env.NODE_ENV == "production") {
   // eslint-disable-next-line no-undef
-  app.use(cors({ origin: [config.FRONT_END_URL] }));
+  app.use(cors({ origin: '*' }));
 } else if(process.env.NODE_ENV == 'stagging'){
-  app.use(cors({ origin: [config.FRONT_END_URL]}));
+  app.use(cors({ origin: '*'}));
 }
 else{
   app.use(cors({ origin: "*" }));
