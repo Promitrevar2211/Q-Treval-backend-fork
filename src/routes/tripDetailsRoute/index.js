@@ -19,7 +19,7 @@ const tripDetailsRoute = Router();
 tripDetailsRoute.post("/create-detail",createTripDetailsHandler);
 tripDetailsRoute.put("/update-detail/:tripId",authenticateUser,authenticateAdmin,updateTripDetailsHandler);
 tripDetailsRoute.delete("/delete-detail/:tripId",authenticateUser,authenticateAdmin,deleteTripDetailsHandler);
-tripDetailsRoute.get("/single-detail/:tripId",authenticateUser,authenticateOnlyMember,getSingleTripDetailsHandler);
+tripDetailsRoute.get("/single-detail/:tripId",getSingleTripDetailsHandler); // authenticateUser,authenticateOnlyMember,
 tripDetailsRoute.get("/list-detail",getListTripDetailsHandler); //authenticateUser,authenticateOnlyMember
 
 //Note Apis
