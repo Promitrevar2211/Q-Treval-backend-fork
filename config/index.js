@@ -15,6 +15,7 @@ const configVariables = {
   FRONT_END_URL: config.get("FRONT_END_URL"),
   EXPIRED_IN: config.get("EXPIRED_IN"),
   REFRESH_EXPIRED_IN: config.get("REFRESH_EXPIRED_IN"),
+  S3_BUCKET_NAME:"qtravels",
   GOOGLE_SERVICE_ACCOUNT_EMAIL:
     "quantum-travels@quantum-travels-391610.iam.gserviceaccount.com",
   GOOGLE_PRIVATE_KEY:

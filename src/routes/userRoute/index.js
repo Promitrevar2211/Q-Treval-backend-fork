@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { createUserHandler } from "./create.user.js";
 import { getListUserHandler, getSingleUserHandler } from "./get.user.js";
+import { upload } from "../../middleware/uploadFiles.js";
 import { updateUserHandler } from "./update.user.js";
 import { deleteUserHandler } from "./delete.user.js";
 import { updatePassword } from "./change.password.js";
@@ -11,10 +12,12 @@ import { verifyUserHandler } from "./verify.user.js";
 import { otpHandler, changePasswordOtpHandler } from "./send.otp.js";
 import { getUserTrips } from "./get.user.trip.history.js";
 import { createUserChat } from  "./create.chat.js";
+import { documentUploadHandler } from "../file-upload/index.js"
 
 const userRoute = Router();
 
 userRoute.post('/create-user',createUserHandler);
+userRoute.post('/update-profile',upload.single('file'),documentUploadHandler);
 userRoute.get('/single-user/:userId',authenticateUser,authenticateOnlyMember,getSingleUserHandler);
 userRoute.get('/list-user',authenticateUser,authenticateOnlyMember,getListUserHandler); 
 userRoute.put('/update-user/:userId?',authenticateUser,updateUserHandler);

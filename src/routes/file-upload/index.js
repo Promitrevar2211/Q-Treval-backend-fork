@@ -1,7 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import dotenv from "dotenv";
 import config from "../../../config/index.js";
-import AWS, { S3 } from "aws-sdk";
+import AWS from "aws-sdk";
 import * as path from "path";
 import Joi from "joi";
 import {
@@ -15,10 +15,10 @@ import {
   logsErrorAndUrl,
   responseGenerators,
   responseValidation,
-} from "../../lib/utils";
+} from "../../lib/utils.js";
 import { generatePublicId } from "../../commons/common-functions.js";
 import { CustomError, FileTypeIssue } from "../../helpers/custome.error.js";
-
+const { S3 } = AWS;
 dotenv.config();
 
 AWS.config.update({
@@ -62,7 +62,7 @@ export const uploads3 = async (file, bucket, name, mimeType) => {
       });
     });
   } catch (error) {
-    // set logs Error function
+
     logsError(error);
   }
 };
@@ -72,7 +72,7 @@ export const documentUploadHandler = async (req, res) => {
   try {
     const data = req.file;
     const fileSize = data.size;
-   // await documentUploadValidation.validateAsync(req.body);
+    // await documentUploadValidation.validateAsync(req.body);
     if (!data) {
       return res
         .status(StatusCodes.BAD_REQUEST)
@@ -144,8 +144,7 @@ export const documentUploadHandler = async (req, res) => {
     // logsErrorAndUrl(req, error);
     if (
       error instanceof CustomError ||
-      error instanceof FileTypeIssue ||
-      error instanceof ValidationError
+      error instanceof FileTypeIssue 
     ) {
       return res
         .status(StatusCodes.BAD_REQUEST)

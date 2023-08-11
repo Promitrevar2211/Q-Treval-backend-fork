@@ -9,28 +9,52 @@ import UserModel from "../../models/userModel.js";
 import tripDetailsModel from "../../models/userTripDetailsModel.js";
 
 export const getUserTrips = async(req,res) => {
-    try{
-        const pagination = setPagination(req.query);
-        const {email} =  req.params;
-        
-        const result = await tripDetailsModel.find({
-                email: email,
-                isDeleted: false
-            }).sort({ ...pagination.sort })
-            .skip(pagination.offset)
-            .limit(pagination.limit);
-
-            return res
-            .status(StatusCodes.OK)
-            .send(
-            responseGenerators(
-                { result },
-                StatusCodes.OK,
-                "TRIPS FETCHED SUCCESSFULLY",
-                0
-            )
-            );
-        }
+  try {
+    const pagination = setPagination(req.query);
+    let where = {
+      email: req.params.email,
+      isDeleted: false,
+    };
+    //console.log(req.query.search);
+    let paginated_data_req;
+    if(req.query.date){
+      paginated_data_req = tripDetailsModel.find({going_travel_date: new Date(req.query.date),email: req.params.email});
+    }
+    else{
+    paginated_data_req=(req.query.search)?  tripDetailsModel
+    .find({"$and":
+                [{"$or":[
+                  {'destination':{"$regex": req.query.search, "$options":'i'}} 
+                  ,{'email':{"$regex": req.query.search, "$options":"i"}},
+                  {'name':{"$regex": req.query.search, "$options":"i"}},
+                ]},
+                {...where}, 
+          ]})
+    :  tripDetailsModel
+      .find({ ...where });
+    }
+      if(req.query.time){
+        paginated_data_req.sort({going_travel_date:1});
+      }
+      else if(req.query.location){
+        paginated_data_req.sort({destination: 1});
+      }
+      const paginated_data = await paginated_data_req
+      .sort({ ...pagination.sort })
+      .skip(pagination.offset)
+      .limit(pagination.limit);
+    let total_count = await tripDetailsModel.count({ ...where });
+    return res
+      .status(StatusCodes.OK)
+      .send(
+        responseGenerators(
+          { paginated_data, total_count },
+          StatusCodes.OK,
+          "TRIP DETAILS FOUND SUCCESSFULLY",
+          0
+        )
+      );
+  }
         catch(error){
             return res
             .status(StatusCodes.INTERNAL_SERVER_ERROR)
