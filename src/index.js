@@ -76,9 +76,9 @@ app.use(express.urlencoded());
 app.use(express.json());
 
 const limiter = rateLimit({
-  windowMs: 5 * 60 * 1000, // 5 minutes
-  max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
-  message: "Too many request hit from this IP, please try again after 5 min.",
+  windowMs: 2 * 60 * 1000, // 2 minutes
+  max: 500, // Limit each IP to 500 requests per `window` (here, per 15 minutes)
+  message: "Too many request hit from this IP, please try again after 2 min.",
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
